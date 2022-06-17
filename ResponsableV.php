@@ -2,7 +2,7 @@
 
 include_once ('BaseDatoss.php');
 
-class ResponsableV{
+class responsable{
 
     private $rnumeroempleado;
     private $rnumerolicencia;
@@ -20,6 +20,8 @@ class ResponsableV{
     }
 
     //Metodos de accese a los atributos
+
+
 
     public function getrnumeroempleado()
     {
@@ -131,7 +133,7 @@ class ResponsableV{
 
 }
 
-$obj= new ResponsableV(15,1555,'Laurea','Luna');
+$obj= new responsable(15,1555,'Laurea','Luna');
 
 $x = $obj->Buscar(1555);
 echo $x;

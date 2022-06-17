@@ -23,7 +23,7 @@ class BaseDatos {
         $this->CLAVE="";
         $this->RESULT=0;
         $this->QUERY="";
-        $this->ERROR="dasda";
+        $this->ERROR="";
     }
     /**
      * Funcion que retorna una cadena

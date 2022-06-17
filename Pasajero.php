@@ -5,10 +5,11 @@
     */
     class pasajero{
 
-        private $nombre;
-        private $apellido;
-        private $dni;
-        private $telefono;    
+        private $pnombre;
+        private $papellido;
+        private $rdocumento;
+        private $ptelefono;  
+        private $idviaje; 
     
             /**Implementamos el metodo Constructor del objeto
              * @param string $nomPers
@@ -17,107 +18,129 @@
              * 
              */
 
-        public function __construct($nomPers, $apellidoPers, $dniPersona, $numTelefono,)
+        public function __construct($nomPers, $apellidoPers, $dniPersona, $numTelefono, $idViaje)
         {
-           $this->nombre = $nomPers;
-           $this->apellido = $apellidoPers;
-           $this->dni = $dniPersona;
-           $this->telefono = $numTelefono;
+           $this->pnombre = $nomPers;
+           $this->papellido = $apellidoPers;
+           $this->rdocumento = $dniPersona;
+           $this->ptelefono = $numTelefono;
+           $this->idviaje = $idViaje;
         }
 
-        //Implementamos los metodos de acceso a los atributos
+           //Implementamos los metodos de acceso a los atributos
         
-        // Getters y Setters
+                        // Getters y Setters
 
-             /**
-         * Get the value of nombre
+        /**
+         * Get the value of pnombre
          */ 
-        public function getNombre()
+        public function getPnombre()
         {
-                return $this->nombre;
+                return $this->pnombre;
         }
 
         /**
-         * Set the value of nombre
+         * Set the value of pnombre
          *
          * @return  self
          */ 
-        public function setNombre($nombre)
+        public function setPnombre($pnombre)
         {
-                $this->nombre = $nombre;
+                $this->pnombre = $pnombre;
 
+                return $this;
         }
 
         /**
-         * Get the value of apellido
+         * Get the value of papellido
          */ 
-        public function getApellido()
+        public function getPapellido()
         {
-                return $this->apellido;
+                return $this->papellido;
         }
 
         /**
-         * Set the value of apellido
+         * Set the value of papellido
          *
          * @return  self
          */ 
-        public function setApellido($apellido)
+        public function setPapellido($papellido)
         {
-                $this->apellido = $apellido;
+                $this->papellido = $papellido;
 
+                return $this;
         }
 
         /**
-         * Get the value of dni
+         * Get the value of rdocumento
          */ 
-        public function getDni()
+        public function getRdocumento()
         {
-                return $this->dni;
+                return $this->rdocumento;
         }
 
         /**
-         * Set the value of dni
+         * Set the value of rdocumento
          *
          * @return  self
          */ 
-        public function setDni($dni)
+        public function setRdocumento($rdocumento)
         {
-                $this->dni = $dni;
+                $this->rdocumento = $rdocumento;
 
+                return $this;
         }
 
         /**
-         * Get the value of telefono
+         * Get the value of ptelefono
          */ 
-        public function getTelefono()
+        public function getPtelefono()
         {
-                return $this->telefono;
+                return $this->ptelefono;
         }
 
         /**
-         * Set the value of telefono
+         * Set the value of ptelefono
          *
          * @return  self
          */ 
-        public function setTelefono($telefono)
+        public function setPtelefono($ptelefono)
         {
-                $this->telefono = $telefono;
+                $this->ptelefono = $ptelefono;
 
+                return $this;
         }
+
+        /**
+         * Get the value of idviaje
+         */ 
+        public function getIdviaje()
+        {
+                return $this->idviaje;
+        }
+
+        /**
+         * Set the value of idviaje
+         *
+         * @return  self
+         */ 
+        public function setIdviaje($idviaje)
+        {
+                $this->idviaje = $idviaje;
+
+                return $this;
+        }
+
+     
+
        
         /**Metodo implemetado para poder mostrar los datos de dicho objeto */
         public function __toString()
         {
-            $str = " Nombre: ".($this->getNombre())."\n Apellido: ".$this->getApellido()."\n Numero de DNI: ".($this->getDni())."\nNumero de Telefono: ".($this->getTelefono())."\n";
+            $str = " Nombre: ".$this->getPnombre().
+            "\n Apellido: ".$this->getPapellido().
+            "\n Numero de DNI: ".$this->getRdocumento().
+            "\n Numero de Telefono: ".$this->getPtelefono()."\n";
             return $str;
         }
-
-       
-
-
-
-   
-
-       
 }
-?>
