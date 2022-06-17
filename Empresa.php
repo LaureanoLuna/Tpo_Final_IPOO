@@ -5,6 +5,7 @@ class empresa{
     private $idempresa;
     private $enombre;
     private $edireccion;
+    private $mensajeoperacion;
 
     public function __construct($id,$nombre,$direccion)
     {
@@ -73,10 +74,74 @@ class empresa{
         return $this;
     }
 
+    public function getmensajeoperacion(){
+		return $this->mensajeoperacion ;
+	}
+
+    public function setmensajeoperacion($mensajeoperacion){
+		$this->mensajeoperacion=$mensajeoperacion;
+	}
+
     public function __toString()
     {
         $str = "\n{$this->getEnombre()}.\n{$this->getIdempresa()}.\n{$this->getEdireccion()}.\n";
         
         return $str;
     }
+
+
+    public function IngresarEmpresa()
+    {
+        $base = new BaseDatos;
+        $bool = true;
+        $consulta= "INSERT INTO empresa (idempresa,enombre,edireccion) VALUES (".$this->getIdempresa().",'".$this->getEnombre()."','".$this->getEdireccion()."')";
+        if ($base->Iniciar()){
+            if ($base->Ejecutar($consulta)){
+                $bool = true;
+            }else{
+                $this->setmensajeoperacion($base->getError());
+            }
+        }else{
+            $this->setmensajeoperacion($base->getError());
+        }
+
+        return $bool;
+    }
+
+    public function ModificarEmpresa()
+    {
+        $base = new BaseDatos;
+        $bool = false;
+        $consulta = "UPDATE empresa SET idempresa='".$this->getIdempresa()."',enombre='".$this->getEnombre()."',edireccion='".$this->getEdireccion()."' WHERE idempresa=". $this->getIdempresa();
+        if ($base->Iniciar()){
+            if($base->Ejecutar($consulta)){
+                $bool = true;
+            }else{
+                $this->setmensajeoperacion($base->getError());
+            }
+        }else{
+            $this->setmensajeoperacion($base->getError());
+        }
+        return $bool;
+    }
+
+    public function EliminarEmpresa()
+    {
+        $base = new BaseDatos;
+        $bool = false;
+        $consulta = "DELETE FROM empresa WHERE idempresa=". $this->getIdempresa();
+        if($base->Iniciar()){
+            if($base->Ejecutar($consulta)){
+                $bool = true;
+            }else{
+                $this->setmensajeoperacion($base->getError());
+            }
+        }else{
+            $this->setmensajeoperacion($base->getError());
+        }
+
+        return $bool;
+    }
+
+
 }
