@@ -1,7 +1,5 @@
 <?php
 
-include_once ('BaseDatoss.php');
-
 class responsable{
 
     private $rnumeroempleado;
@@ -100,42 +98,50 @@ class responsable{
     }
 
 
-    /**
-	 * Recupera los datos de una persona por dni
-	 * @param int $dni
-	 * @return true en caso de encontrar los datos, false en caso contrario 
-	 */		
-    public function Buscar($legajo){
-		$base=new BaseDatos();
-		$consultaPersona="Select rnombre from responsable where id=".$legajo;
-		$resp= false;
-		if($base->Iniciar()){
-			if($base->Ejecutar($consultaPersona)){
-				if($row2=$base->Registro()){					
-				    $this->setrnumerolicencia($legajo);
-					$this->setrnombre($row2['nombre']);
-					$this->setrapellido($row2['apellido']);
-					$this->setrnumeroempleado($row2['dni']);
-					$resp= true;
-				}else {
-		 			$this->setmensajeoperacion($base->getError()); 
-                }
-		 		
-			}else {
-		 		$this->setmensajeoperacion($base->getError()); 
-            }
-	
-         		
-		 return $resp;
-
+    public function BuscarResponsable($id)
+{
+    $base = new BaseDatos();
+    $consulta = "select * from responsable where  rnumeroempleado = ".$id;
+    $resp = false;
+    if($base->Iniciar()){
+       if($base->Ejecutar($consulta)){
+        if($fila2 = $base->Registro()){
+            $this->setrnumeroempleado($id);
+            $this->setrnombre($fila2['rnombre']);
+            $this->setrapellido($fila2['rapellido']);
+            $this->setrnumerolicencia($fila2['rnumerolicencia']);
+            $resp = true;
         }
-    }
 
+       }else{
+            $this->setMensajeoperacion($base->getError());
+       }
+    }else{
+        $this->setMensajeoperacion($base->getError());
+   }
+   return $resp;
 }
 
-$obj= new responsable(15,1555,'Laurea','Luna');
+public function AgregarResponsable(){
+    $base = new BaseDatos();
+    $bool = false;
+    $consulta = "INSERT INTO responsable(rnumeroempleado,rnumerolicencia,rnombre,rapellido) VALUES (33,3543,'Laureano','Luna')";
+    if($base->Iniciar()){
+        if($base->Ejecutar($consulta)){
+            $bool = true;
+            
+        }else{
+            $this->setMensajeoperacion($base->getError());
+           
+        }
+    }else{
+        $this->setMensajeoperacion($base->getError());
+        
+    }
 
-$x = $obj->Buscar(1555);
-echo $x;
+    return $bool;
+}
 
+}
+   
 ?>
