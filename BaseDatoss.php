@@ -19,8 +19,8 @@ class BaseDatos {
         $this->HOSTNAME = "127.0.0.1";
         $this->BASEDATOS = "bd_viaje";
         $this->USUARIO = "root";
-        $this->PORT = "3307";
-        $this->CLAVE="";
+        $this->PORT = "3306";
+        $this->CLAVE="lunalaureanodevelopers";
         $this->RESULT=0;
         $this->QUERY="";
         $this->ERROR="";
