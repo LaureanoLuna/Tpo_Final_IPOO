@@ -10,6 +10,7 @@
         private $rdocumento;
         private $ptelefono;  
         private $idviaje; 
+        private $mensajeoperacion;
     
             /**Implementamos el metodo Constructor del objeto
              * @param string $nomPers
@@ -18,13 +19,13 @@
              * 
              */
 
-        public function __construct($nomPers, $apellidoPers, $dniPersona, $numTelefono, $idViaje)
+        public function __construct($nomPers, $apellidoPers, $dniPersona, $numTelefono)
         {
            $this->pnombre = $nomPers;
            $this->papellido = $apellidoPers;
            $this->rdocumento = $dniPersona;
            $this->ptelefono = $numTelefono;
-           $this->idviaje = $idViaje;
+           $this->idviaje ;
         }
 
            //Implementamos los metodos de acceso a los atributos
@@ -131,6 +132,16 @@
                 return $this;
         }
 
+        
+	public function setmensajeoperacion($mensajeoperacion){
+		$this->mensajeoperacion=$mensajeoperacion;
+	}
+
+        
+	public function getmensajeoperacion(){
+		return $this->mensajeoperacion;
+	}
+
      
 
        
@@ -142,5 +153,44 @@
             "\n Numero de DNI: ".$this->getRdocumento().
             "\n Numero de Telefono: ".$this->getPtelefono()."\n";
             return $str;
+        }
+
+
+        public function AgregarPasajero()
+        {
+                $base = new BaseDatos;
+                $bool = false;
+                $consulta ="INSERT INTO pasajero(rdocumento,pnombre,papellido,ptelefono) 
+                VALUES (".$this->getRdocumento().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."')";
+                if ($base->Iniciar()){
+                        if($base->Ejecutar($consulta)){
+                                $bool = true;
+                        }else{
+                                $this->setmensajeoperacion($base->getError());
+                        }
+                }else{
+                        $this->setmensajeoperacion($base->getError());
+                }
+
+                return $bool;
+        }
+
+
+        public function ModificarPasajero()
+        {
+                $base = new BaseDatos;
+                $bool = false;
+                $consulta = "UPDATE pasajero SET papellido='".$this->getPapellido()."',pnombre='".$this->getPnombre()."',ptelefono='".$this->getPtelefono()."',idviaje='".$this->getIdviaje()."' WHERE rdocumento=". $this->getRdocumento();
+                if($base->Iniciar()){
+                        if($base->Ejecutar($consulta)){
+                                $bool = true;
+                        }else{
+                                $this->setmensajeoperacion($base->getError());
+                        }
+                }else{
+                        $this->setmensajeoperacion($base->getError());
+                }
+
+                return $bool;
         }
 }
