@@ -10,7 +10,7 @@
         private $rdocumento;
         private $ptelefono;  
         private $idviaje; 
-        private $mensajeoperacion;
+
     
             /**
              * Implementamos el metodo Constructor del objeto
@@ -30,9 +30,12 @@
            $this->idviaje ;
         }
 
-           //Implementamos los metodos de acceso a los atributos
+          
+        //***********************************************
+        // Metodos de acceso a los atributos de la clase
+        //************************************************
         
-                        // Getters y Setters
+        // Getters y Setters
 
         /**
          * Get the value of pnombre

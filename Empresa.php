@@ -7,12 +7,26 @@ class empresa{
     private $edireccion;
     private $mensajeoperacion;
 
+    /**
+     * Implementamos el metodo constructor de la clase
+     * @param int $id
+     * @param string $nombre
+     * @param string $direccion
+     */
+
     public function __construct($id,$nombre,$direccion)
     {
         $this->idempresa = $id;
         $this->enombre = $nombre;
         $this->edireccion = $direccion;        
     }
+
+    
+    //***********************************************
+    // Metodos de acceso a los atributos de la clase
+    //************************************************
+
+    // Getters y Setters
 
     /**
      * Get the value of idempresa
@@ -24,14 +38,10 @@ class empresa{
 
     /**
      * Set the value of idempresa
-     *
-     * @return  self
      */ 
     public function setIdempresa($idempresa)
     {
         $this->idempresa = $idempresa;
-
-        return $this;
     }
 
     /**
@@ -44,14 +54,10 @@ class empresa{
 
     /**
      * Set the value of enombre
-     *
-     * @return  self
      */ 
     public function setEnombre($enombre)
     {
         $this->enombre = $enombre;
-
-        return $this;
     }
 
     /**
@@ -64,20 +70,22 @@ class empresa{
 
     /**
      * Set the value of edireccion
-     *
-     * @return  self
      */ 
     public function setEdireccion($edireccion)
     {
         $this->edireccion = $edireccion;
-
-        return $this;
     }
 
+    /**
+     * get the value of mensajeoperacion
+     */
     public function getmensajeoperacion(){
 		return $this->mensajeoperacion ;
 	}
 
+    /**
+     * Se the value of mensajeoperacion
+     */
     public function setmensajeoperacion($mensajeoperacion){
 		$this->mensajeoperacion=$mensajeoperacion;
 	}
@@ -89,7 +97,10 @@ class empresa{
         return $str;
     }
 
-
+    // Metodo para ingresar una nueva tupla a la tabla Empresa
+    /**
+     * @return bool
+     */
     public function IngresarEmpresa()
     {
         $base = new BaseDatos;
@@ -108,6 +119,10 @@ class empresa{
         return $bool;
     }
 
+    /**
+     * Metodo para modificar una tupla de la tabla de Empresa
+     * @return bool
+     */
     public function ModificarEmpresa()
     {
         $base = new BaseDatos;
@@ -124,6 +139,11 @@ class empresa{
         }
         return $bool;
     }
+
+    /**
+     * Metodo para eliminar una tupla de la tabla de Empresa
+     * @return bool
+     */
 
     public function EliminarEmpresa()
     {
@@ -143,7 +163,11 @@ class empresa{
         return $bool;
     }
 
-
+    /**
+     * Metodo para buscar una tupla en la tabla de Empresa, esto es por medio de la clave primaria que ingresa po parametro
+     * @param int $idEmpresa (PRIMARY KEY de al tupla a buscar)
+     * @return bool
+     */
     public function BuscarEmpresa($idEmpresa)
     {
         $base= new BaseDatos();
@@ -167,6 +191,13 @@ class empresa{
         return $resp;
     }
 
+    /**
+     * Metodo para en listar todas las tuplas de la tabla de Empresa
+     * puede realizarla de manera completa o por medio de una condicion ingresada por parametro
+     * retornadolas en un arreglo
+     * @param string $condicion
+     * @return array 
+     */
 
     public function ListarEmpresa($condicion = "")
     {
@@ -181,7 +212,7 @@ class empresa{
          if ($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $arregloEmpresa = array();
-                if($fila=$base->Registro()){                    
+                while($fila=$base->Registro()){                    
                     $arregloEmpresa[]= new empresa($fila['idempresa'],$fila['enombre'],$fila['edireccion']);
                 }
             } else{

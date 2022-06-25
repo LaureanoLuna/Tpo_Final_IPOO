@@ -17,7 +17,12 @@ class responsable{
         $this->mensajeoperacion = "";
     }
 
-    //Metodos de accese a los atributos
+    
+    //***********************************************
+    // Metodos de acceso a los atributos de la clase
+    //************************************************
+
+    // Getters y Setters
 
 
 
@@ -188,7 +193,7 @@ public function ListarResponsable($condicion = "")
     if($base->Iniciar()){
         if($base->Ejecutar($consulta)){
             $arregloResponsable = array();
-            if($fila = $base->Registro()){
+            while($fila = $base->Registro()){
                 $arregloResponsable[]=new responsable($fila['rnumeroempleado'],$fila['rnumerolicencia'],$fila['rnombre'],$fila['rapellido']);
             }
         }else{
