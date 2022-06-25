@@ -101,7 +101,7 @@ class responsable{
     public function BuscarResponsable($id)
 {
     $base = new BaseDatos();
-    $consulta = "select * from responsable where  rnumeroempleado = ".$id;
+    $consulta = "select * from responsable where rnumeroempleado = ".$id;
     $resp = false;
     if($base->Iniciar()){
        if($base->Ejecutar($consulta)){
@@ -140,7 +140,7 @@ public function AgregarResponsable(){
     return $bool;
 }
 
-public function Modificar(){
+public function ModificarResponsable(){
     $bool = false;
     $base = new BaseDatos();
     $consulta="UPDATE responsable SET rapellido='".$this->getrapellido()."',rnombre='".$this->getrnombre()."',rnumerolicencia='".$this->getrnumerolicencia()."' WHERE rnumeroempleado=". $this->getrnumeroempleado();
@@ -174,6 +174,30 @@ public function EliminarResponsable()
     }
 
     return $bool;
+}
+
+public function ListarResponsable($condicion = "")
+{
+    $base = new BaseDatos();
+    $arregloResponsable = null;
+    $consulta = "SELECT * FROM responsable ";
+    if($condicion !=""){
+        $consulta.= "WHERE ".$condicion;
+    }
+    $consulta.=" ORDER BY rapellido";
+    if($base->Iniciar()){
+        if($base->Ejecutar($consulta)){
+            $arregloResponsable = array();
+            if($fila = $base->Registro()){
+                $arregloResponsable[]=new responsable($fila['rnumeroempleado'],$fila['rnumerolicencia'],$fila['rnombre'],$fila['rapellido']);
+            }
+        }else{
+            $this->setMensajeoperacion($base->getError());
+        }
+    }else{
+        $this->setMensajeoperacion($base->getError());
+    }
+    return $arregloResponsable;
 }
 
 

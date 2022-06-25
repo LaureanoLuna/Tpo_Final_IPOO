@@ -12,11 +12,13 @@
         private $idviaje; 
         private $mensajeoperacion;
     
-            /**Implementamos el metodo Constructor del objeto
-             * @param string $nomPers
-             * @param string $apellidoPers
-             * @param atring $dniPersona
-             * 
+            /**
+             * Implementamos el metodo Constructor del objeto
+             * @param string $pnombre
+             * @param string $papellido
+             * @param int $rdocumento
+             * @param string $ptelefono
+             * @param int $idviaje             * 
              */
 
         public function __construct($nomPers, $apellidoPers, $dniPersona, $numTelefono)
@@ -192,5 +194,79 @@
                 }
 
                 return $bool;
+        }
+
+        public function eliminar(){
+                $base = new BaseDatos();
+                $resp = false;
+                if ($base->Iniciar()){
+                        $consulta = "DELETE FROM pasajero WHERE rdocumento= ". $this->getRdocumento();
+                        if($base->Ejecutar($consulta)){
+                                $resp = true;
+                        }else{
+                                $this->setmensajeoperacion($base->getError());
+                        }
+                }else{
+                        $this->setmensajeoperacion($base->getError());
+                }
+                return $resp;
+        }
+
+        public function Listar($condicion=""){
+                $arregloPasajero = null;
+                $objBase = new BaseDatos();
+                $consulta="SELECT * FROM pasajero ";
+                if ($condicion != ""){
+                        $consulta.=' WHERE '. $condicion;
+                }
+                $consulta+="ORDER BY apellido ";
+                if ($objBase->Iniciar()){
+                        if($objBase->Ejecutar($consulta)){
+                                $arregloPasajero=[];
+                                while($fila=$objBase->Registro()){
+
+                                        $dni=$fila['rdocumento'];
+                                        $nombre=$fila['pnombre'];
+                                        $apellido=$fila['papellido'];
+                                        $tel=$fila['ptelefono'];
+                                        $idviaje=$fila['idviaje'];
+                                        $pasajero=new pasajero($nombre,$apellido,$dni,$tel);
+                                        $pasajero->setIdviaje($idviaje);
+                                        $arregloPasajero[] = $pasajero;
+                                }
+                        }else {
+                                $this->setmensajeoperacion($objBase->getError());
+                        }
+                }else {
+                        $this->setmensajeoperacion($objBase->getError());
+                }
+
+                return $arregloPasajero;
+        }
+
+        public function Buscar($dni)
+        {
+                $base = new BaseDatos();
+                $consulta = "SELECT * FROM pasajero WHERE rdocumento=".$dni;
+                $resp = false;
+                if ($base->Iniciar()){
+                        if($base->Ejecutar($consulta)){
+                                if($fila=$base->Registro()){
+                                        $this->setRdocumento($dni);
+                                        $this->setPnombre($fila['pnombre']);
+                                        $this->setPapellido($fila['papellido']);
+                                        $this->setPtelefono($fila['ptelefono']);
+                                        $this->setIdviaje($fila['idviaje']);
+                                        $resp = true;
+                                }else {
+                                        $this->setmensajeoperacion($base->getError());
+                                }
+                        }else {
+                                $this->setmensajeoperacion($base->getError());
+                        }
+
+                }
+                
+                return $resp;
         }
 }

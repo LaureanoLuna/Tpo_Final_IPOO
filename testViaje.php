@@ -49,10 +49,10 @@ if ($resp){
     echo "anda";
 } */
 
-$objPasajero= new pasajero("Laureano","Luna",38233325,1126478811);
+//$objPasajero= new pasajero("Laureano","Luna",38233325,1126478811);
 
 /*$resp = $objPasajero->AgregarPasajero() */;
- 
+ /* 
 $objPasajero->setRdocumento(35468488);
 $objPasajero->setPnombre("CArlsod");
 
@@ -60,4 +60,27 @@ $resp = $objPasajero->ModificarPasajero(35468488);
 
 if ($resp){
     echo "Anda";
+} */
+
+
+$consulta= "SELECT * From pasajero inner join viaje on viaje.idviaje = pasajero.idviaje where pasajero.pnombre IN (SELECT * from pasajero where pnombre = 'Laureano');";
+$objBase= new BaseDatos();
+if($objBase->Iniciar()){
+    if($objBase->Ejecutar($consulta)){
+        $arrayPasajero=[];
+        while ($fila=$objBase->Registro()) {
+           $dni=$fila['rdocumento'];
+           $nombre=$fila['pnombre'];
+           $apellido=$fila['papellido'];
+           $tel=$fila['ptelefono'];
+           $idviaje=$fila['idviaje'];
+
+           $pasajero=new pasajero($nombre,$apellido,$dni,$tel);
+           $arrayPasajero[] = $pasajero;
+        }
+
+    }
 }
+
+print_r($arrayPasajero);
+

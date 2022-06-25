@@ -144,4 +144,54 @@ class empresa{
     }
 
 
+    public function BuscarEmpresa($idEmpresa)
+    {
+        $base= new BaseDatos();
+        $consulta = "SELECT * FROM empresa WHERE idempresa=" .$idEmpresa;
+        $resp = false;
+        if($base->Iniciar()){
+            if($base->Ejecutar($consulta)){
+                if($fila=$base->Registro()){
+                    $this->setIdempresa($idEmpresa);
+                    $this->setEnombre($fila['enombre']);
+                    $this->setEdireccion($fila['edireccion']);
+                    $resp = true;
+                }
+
+            }else{
+                $this->setmensajeoperacion($base->getError());
+            }
+        }else{
+            $this->setmensajeoperacion($base->getError());
+        }
+        return $resp;
+    }
+
+
+    public function ListarEmpresa($condicion = "")
+    {
+        $arregloEmpresa = null;
+        $base = new BaseDatos();
+        $consulta = "SELECT * FROM empresa";
+        if ($condicion != ""){
+            $consulta.= " WHERE ". $condicion;
+        }
+         $consulta .= "ORDER BY enombre";
+
+         if ($base->Iniciar()){
+            if($base->Ejecutar($consulta)){
+                $arregloEmpresa = array();
+                if($fila=$base->Registro()){                    
+                    $arregloEmpresa[]= new empresa($fila['idempresa'],$fila['enombre'],$fila['edireccion']);
+                }
+            } else{
+                $this->setmensajeoperacion($base->getError());
+            }
+
+         }else{
+            $this->setmensajeoperacion($base->getError());
+         }
+         return $arregloEmpresa;
+    }
+   
 }
