@@ -160,7 +160,10 @@
             return $str;
         }
 
-
+        /**
+         * Metodo para ingresar una nueva tupla a la tabla Pasajero
+         * @return bool
+         */
         public function AgregarPasajero()
         {
                 $base = new BaseDatos;
@@ -181,6 +184,10 @@
         }
 
 
+        /**
+         * Metodo para modificar una tupla de la tabla Pasajero
+         * @return bool
+         */
         public function ModificarPasajero()
         {
                 $base = new BaseDatos;
@@ -199,7 +206,12 @@
                 return $bool;
         }
 
-        public function eliminar(){
+        /**
+         * Metodo para eliminar una tupla de la tabla de Pasajeros
+         * @return bool
+         */
+
+        public function EliminarPasajero(){
                 $base = new BaseDatos();
                 $resp = false;
                 if ($base->Iniciar()){
@@ -214,6 +226,14 @@
                 }
                 return $resp;
         }
+
+        /**
+         * Metodo para listar todas las tuplas de la Pasajero 
+         * puede realizarla de manera completa o por medio de una condicion ingresada por parametro
+         * retornadolas en un arreglo
+         * @param string $condicion
+         * @return array
+         */
 
         public function Listar($condicion=""){
                 $arregloPasajero = null;
@@ -246,6 +266,12 @@
 
                 return $arregloPasajero;
         }
+
+        /**
+         * Metodo para buscar un tupla de la tabla Pasajero, esto es por medio de la clave primaria ingresada por parametro
+         * @param int $dni (PRIMARY KEY de la tupla a buscar)
+         * @return bool
+         * */
 
         public function Buscar($dni)
         {

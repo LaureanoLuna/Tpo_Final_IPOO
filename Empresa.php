@@ -164,7 +164,7 @@ class empresa{
     }
 
     /**
-     * Metodo para buscar una tupla en la tabla de Empresa, esto es por medio de la clave primaria que ingresa po parametro
+     * Metodo para buscar una tupla en la tabla de Empresa, esto es por medio de la clave primaria que es ingresa por parametro
      * @param int $idEmpresa (PRIMARY KEY de al tupla a buscar)
      * @return bool
      */

@@ -102,7 +102,11 @@ class responsable{
         return $str;
     }
 
-
+/**
+ * Metodo para buscar una tupla de la tabla de Responsable, esto es por medio de la clave primaria ingresada por parametro
+ * @param int $id (PRIMARY KEY de la tupla a buscar)
+ * @return bool
+ */
     public function BuscarResponsable($id)
 {
     $base = new BaseDatos();
@@ -127,6 +131,10 @@ class responsable{
    return $resp;
 }
 
+/**
+ * Metodo para ingresar una nueva tupla a la tabla Responsable
+ * @return bool
+ */
 public function AgregarResponsable(){
     $base = new BaseDatos();
     $bool = false;
@@ -145,6 +153,11 @@ public function AgregarResponsable(){
     return $bool;
 }
 
+
+/**
+ * Metodo para modificar una tupla de la tabla Responsable 
+ * @return bool
+ */
 public function ModificarResponsable(){
     $bool = false;
     $base = new BaseDatos();
@@ -162,6 +175,10 @@ public function ModificarResponsable(){
 }
 
 
+/**
+ * Metodo para eliminar una tupla de la tabla Responsable 
+ * @return bool
+ */
 public function EliminarResponsable()
 {
     $base= new BaseDatos;
@@ -181,6 +198,13 @@ public function EliminarResponsable()
     return $bool;
 }
 
+/**
+ * Metodo para listar todas las tuplas de la tabla Responsable
+ * puede ser de manera completa o limitada por una condicion ingresada por parametro
+ * retornandolas en un arreglo
+ * @param string $condicion
+ * @return array
+ */
 public function ListarResponsable($condicion = "")
 {
     $base = new BaseDatos();
