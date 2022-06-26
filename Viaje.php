@@ -2,7 +2,7 @@
 
 class viaje{
 
-    private $idviaje;
+    private $id;
     private $vdestino;
     private $vcantmaxpasajeros;
     private $rdocumento;
@@ -13,17 +13,28 @@ class viaje{
     private $idayvuelta;
     private $mensajeoperacion;
 
-    public function __construct($id,$destino,$cantMaxPasajeros,$documento,$importe,$tipoAsiento,$idayvuelta)
+    public function __construct()
     {
-        $this->idviaje = $id;
-        $this->vdestino = $destino;
-        $this->vcantmaxpasajeros = $cantMaxPasajeros;
-        $this->rdocumento = $documento;
-        $this->vimporte = $importe;
-        $this->tipoAsiento = $tipoAsiento;
-        $this->idayvuelta = $idayvuelta;
+        $this->id = "";
+        $this->vdestino = "";
+        $this->vcantmaxpasajeros = "";
+        $this->rdocumento = "";
+        $this->vimporte = "";
+        $this->tipoAsiento = "";
+        $this->idayvuelta = "";        
         $this->idempresa = null;
         $this->rnumeroempleado = null;
+    }
+
+    public function Cargar($id,$destino,$cantMaxPasajeros,$documento,$importe,$tipoAsiento,$idayvuelta)
+    {
+        $this->setId($id);
+        $this->setVdestino($destino);
+        $this->setVcantmaxpasajeros($cantMaxPasajeros);
+        $this->setRdocumento($documento);
+        $this->setVimporte($importe);
+        $this->setTipoAsiento($tipoAsiento);
+        $this->setIdayvuelta($idayvuelta);
     }
 
     //***********************************************
@@ -33,23 +44,21 @@ class viaje{
     // Getters y Setters
 
     /**
-     * Get the value of idviaje
+     * Get the value of id
      */ 
-    public function getIdviaje()
+    public function getId()
     {
-        return $this->idviaje;
+        return $this->id;
     }
 
     /**
-     * Set the value of idviaje
+     * Set the value of id
      *
      * @return  self
      */ 
-    public function setIdviaje($idviaje)
+    public function setId($id)
     {
-        $this->idviaje = $idviaje;
-
-        return $this;
+        $this->id = $id;
     }
 
     /**
@@ -68,8 +77,6 @@ class viaje{
     public function setVdestino($vdestino)
     {
         $this->vdestino = $vdestino;
-
-        return $this;
     }
 
     /**
@@ -88,8 +95,6 @@ class viaje{
     public function setVcantmaxpasajeros($vcantmaxpasajeros)
     {
         $this->vcantmaxpasajeros = $vcantmaxpasajeros;
-
-        return $this;
     }
 
     /**
@@ -108,8 +113,6 @@ class viaje{
     public function setRdocumento($rdocumento)
     {
         $this->rdocumento = $rdocumento;
-
-        return $this;
     }
 
     /**
@@ -128,8 +131,6 @@ class viaje{
     public function setIdempresa($idempresa)
     {
         $this->idempresa = $idempresa;
-
-        return $this;
     }
 
     /**
@@ -148,8 +149,6 @@ class viaje{
     public function setRnumeroempleado($rnumeroempleado)
     {
         $this->rnumeroempleado = $rnumeroempleado;
-
-        return $this;
     }
 
     /**
@@ -168,8 +167,6 @@ class viaje{
     public function setVimporte($vimporte)
     {
         $this->vimporte = $vimporte;
-
-        return $this;
     }
 
     /**
@@ -188,8 +185,6 @@ class viaje{
     public function setTipoAsiento($tipoAsiento)
     {
         $this->tipoAsiento = $tipoAsiento;
-
-        return $this;
     }
 
     /**
@@ -208,8 +203,6 @@ class viaje{
     public function setIdayvuelta($idayvuelta)
     {
         $this->idayvuelta = $idayvuelta;
-
-        return $this;
     }
 
      /**
@@ -228,14 +221,12 @@ class viaje{
     public function setMensajeoperacion($mensajeoperacion)
     {
         $this->mensajeoperacion = $mensajeoperacion;
-
-        return $this;
     }
 
     public function __toString()
     {
-        $str = "\n{$this->getIdviaje()}.\n{$this->getVdestino()}.\n{$this->getVcantmaxpasajeros()}.\n{$this->getRdocumento()}.\n{$this->getIdempresa()}.
-        \n{$this->getRnumeroempleado()}.\n{$this->getVimporte()}.\n{$this->getTipoAsiento()}.\n{$this->getIdayvuelta()}.\n";
+        $str = "\n".$this->getId()."\n".$this->getVdestino()."\n".$this->getVcantmaxpasajeros()."\n".$this->getRdocumento()."\n".$this->getIdempresa().
+        "\n".$this->getRnumeroempleado()."\n".$this->getVimporte()."\n".$this->getTipoAsiento()."\n".$this->getIdayvuelta()."\n";
         return $str;
     }
 
@@ -247,7 +238,7 @@ class viaje{
     public function IngresarViaje()
     {
         $base = new BaseDatos();
-        $consulta = "INSERT INTO viaje (idviaje,vdestino,vcantmaxpasajero,rdocumento,vimporte,tipoAsiento,idayvuelta) VALUES ({$this->getIdviaje()},{$this->getVdestino()},{$this->getVcantmaxpasajeros()},{$this->getRdocumento()},{$this->getVimporte()},{$this->getTipoAsiento()},{$this->getIdayvuelta()})";
+        $consulta = "INSERT INTO viaje(idviaje, vdestino, vcantmaxpasajeros, rdocumento, vimporte, tipoAsiento, idayvuelta) VALUES (".$this->getId().",'".$this->getVdestino()."','".$this->getVcantmaxpasajeros()."','".$this->getRdocumento()."','".$this->getVimporte()."','".$this->getTipoAsiento()."','".$this->getIdayvuelta()."')";
         $bool = false;
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
@@ -271,7 +262,7 @@ class viaje{
     {
         $base = new BaseDatos();
         $bool = false;
-        $consulta = "UPDATE viaje SET vdestino ={$this->getVdestino()},vcantmaxpasajero={$this->getVcantmaxpasajeros()},rdocumento={$this->getRdocumento()},vimporte={$this->getVimporte()},tipoAsiento={$this->getTipoAsiento()},idayvuelta={$this->getIdayvuelta()},idempresa={$this->getIdempresa()},rnumeroempleado={$this->getRnumeroempleado()} WHERE idviaje={$this->getIdviaje()}";
+        $consulta = "UPDATE viaje SET vdestino ='".$this->getVdestino()."',vcantmaxpasajeros='".$this->getVcantmaxpasajeros()."',rdocumento='".$this->getRdocumento()."',vimporte='".$this->getVimporte()."',tipoAsiento='".$this->getTipoAsiento()."',idayvuelta='".$this->getIdayvuelta()."',idempresa='".$this->getIdempresa()."',rnumeroempleado='".$this->getRnumeroempleado()."' WHERE idviaje='".$this->getId();
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $bool = true;
@@ -294,7 +285,7 @@ class viaje{
         $base= new BaseDatos();
         $bool = false;
         if($base->Iniciar()){
-            $consulta = "DELETE FROM viaje WHERE idviaje={$this->getIdviaje()}";
+            $consulta = "DELETE FROM viaje WHERE idviaje=".$this->getId();
             if($base->Ejecutar($consulta)){
                 $bool = true;
             }else{
@@ -314,22 +305,22 @@ class viaje{
      * @return array
      */ 
 
-    public function ListarViaje($condicion="")
+    public function Listar($condicion="")
     {
         $arregloViaje=null;
         $base = new BaseDatos;
         $consulta = "SELECT * FROM viaje ";
         if($condicion != ""){
-            $consulta.="WHERE ". $condicion;
+            $consulta.=" WHERE ". $condicion;
         }
-        $consulta .= "ORDER BY vdestino";
+        $consulta .= "ORDER BY idviaje";
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $arregloViaje=array();
                 while($fila=$base->Registro()){
                     $objViaje = new viaje($fila['idviaje'],$fila['vdestino'],$fila['vcantmaxpasajeros'],$fila['rdocumento'],$fila['vimporte'],$fila['tipoAsiento'],$fila['idayvuelta']);
                     if($fila['idempresa'] != null){
-                        $objViaje->setIdviaje($fila['idempresa']);
+                        $objViaje->setId($fila['idempresa']);
                     }
                     if($fila['rnumeroempleado'] != null){
                         $objViaje->setRnumeroempleado($fila['rnumeroempleado']);
@@ -348,19 +339,19 @@ class viaje{
 
     // Metodo para buscar una tupla con la clave primaria de la tabla Viaje
     /**
-     * @param int $idviaje
+     * @param int $id
      * @return bool
      */
-    public function BuscarViaje($idViaje)
+    public function BuscarViaje($id)
     {
         $base = new BaseDatos();
-        $consulta = "SELECT * FROM viaje WHERE idviaje={$this->getIdviaje()}";
+        $consulta = "SELECT * FROM viaje WHERE idviaje=".$this->getId();
         $bool = false;
 
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 if($fila=$base->Registro()){
-                    $this->setIdviaje($idViaje);
+                    $this->setId($id);
                     $this->setVdestino($fila['vdestino']);
                     $this->setVcantmaxpasajeros($fila['vcantmaxpasajeros']);
                     $this->setRdocumento($fila['rdocumento']);

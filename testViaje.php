@@ -26,6 +26,95 @@ function Menu()
     return $opc;
 }
 
+
+
+
+
+switch (Menu()) {
+    case '1':
+        echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
+
+        $codViaje = Interaccion("Codigo identificatorio de Viaje");
+
+        $destino = Interaccion("Ingrese el Destino");
+
+        $capacidadViaje = Interaccion("Capacidad de pasajeros");
+
+        $doc = Interaccion("Ingrese la documentacion");
+
+        $importe = Interaccion("Ingrese el importe");
+        
+        $tipoAsiento = Interaccion("¿Cama o Semi Cama?");
+
+        $idayVuelta = Interaccion("¿Solo Ida?");
+
+        
+        $objEmpresa = new empresa();
+        $opcEmpresa = MostrarOpciones($objEmpresa);
+        $objResponsable = new responsable();
+        $opcRespo = MostrarOpciones($objResponsable); 
+       
+       
+        if(!$objViaje->BuscarViaje($codViaje)){
+
+            if ($objViaje->IngresarViaje()){
+               
+                $objViaje = new viaje();
+                $objViaje->Cargar($codViaje, $destino, $capacidadViaje,$doc,$importe,$tipoAsiento, $idayVuelta);
+                $objViaje->setIdempresa($opcEmpresa);
+                $objViaje->setRnumeroempleado($opcRespo);
+            
+                echo "\n El viaje se guardo correctamente \n";
+              /*   $objEmpresa->BuscarEmpresa($opcEmpresa);
+                $colViaje= $objEmpresa->getColObj();
+                $colViaje[]= $objViaje;
+                $objEmpresa->setColObj($colViaje);
+                print_r($colViaje); */
+            }
+        }
+        break;
+    case '2':
+
+        echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
+        echo "\nIngresar los datos del Pasajero\n";
+        echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
+
+        $nomPasajero =Interaccion("Nombre");
+
+        $apellidoPasajero =Interaccion("Apellido");
+
+        $dniPasajero =Interaccion("Numero de DNI");
+    
+        $numTelefono =Interaccion("Numero de Telefono");
+       
+        $objViaje = new viaje();
+        $objPasajero = new pasajero();
+        if ($objPasajero->Buscar($dniPasajero)){
+
+            $objViaje->BuscarViaje($objPasajero->getIdviaje());
+
+            echo " El Pasajero ya fue registrado en el viaje ";
+            echo $objViaje;
+            
+        }else{
+            $objPasajero->Cargar($nomPasajero, $apellidoPasajero, $dniPasajero, $numTelefono);
+        }
+        
+
+        
+        break;
+    default:
+        # code...
+        break;
+}
+
+
+
+
+
+
+
+
 function Interaccion($tipoSolicitud)
 {
                        
@@ -35,20 +124,32 @@ function Interaccion($tipoSolicitud)
     return $valorRetorno;
 }
 
-switch (Menu()) {
-    case '1':
-        echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
 
-        $destino = Interaccion("Ingrese el Destino");
-        
-        $codViaje = Interaccion("Codigo identificatorio de Viaje");
+
+function MostrarOpciones($obj)
+{
+    $arregloObj = $obj->Listar();
+    foreach ($arregloObj as $x ) {
+        echo "-------------------------------------------------------------\n";
+        echo $x;
+    }
+    echo "/////////////////////////////////////////////////////";
+    $opc = Interaccion("Elija una opcion");
+
     
-        $capacidadViaje = Interaccion("Capacidad de pasajeros");
-    
-        $objViaje = new viaje($codViaje,$destino,$capacidadViaje,);
-        break;
-    
-    default:
-        # code...
-        break;
+    return $opc;   
 }
+
+function Coleccion($obj , $id)
+{
+    $arregloObj = $obj->Listar($id);
+    return $arregloObj;
+}
+
+
+/* foreach($x as $empresa){
+    $arreglo = Coleccion(new viaje(),$empresa->getId());
+    $empresa->setColObj($arreglo); 
+    echo "-------------------------------------\n";
+    echo $empresa;
+} */

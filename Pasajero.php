@@ -7,7 +7,7 @@
 
         private $pnombre;
         private $papellido;
-        private $rdocumento;
+        private $id;
         private $ptelefono;  
         private $idviaje; 
 
@@ -16,18 +16,27 @@
              * Implementamos el metodo Constructor del objeto
              * @param string $pnombre
              * @param string $papellido
-             * @param int $rdocumento
+             * @param int $id
              * @param string $ptelefono
              * @param int $idviaje             * 
              */
 
-        public function __construct($nomPers, $apellidoPers, $dniPersona, $numTelefono)
+        public function __construct()
         {
-           $this->pnombre = $nomPers;
-           $this->papellido = $apellidoPers;
-           $this->rdocumento = $dniPersona;
-           $this->ptelefono = $numTelefono;
-           $this->idviaje ;
+           $this->pnombre ="";
+           $this->papellido = "";
+           $this->id = "";
+           $this->ptelefono ="";
+           $this->idviaje = "";
+        }
+
+
+        public function Cargar($nomPers, $apellidoPers, $dniPersona, $numTelefono)
+        {
+               $this->setPnombre($nomPers);
+               $this->setPapellido($apellidoPers);
+               $this->setId($dniPersona);
+               $this->seTptelefono($numTelefono);
         }
 
           
@@ -78,21 +87,21 @@
         }
 
         /**
-         * Get the value of rdocumento
+         * Get the value of id
          */ 
-        public function getRdocumento()
+        public function getId()
         {
-                return $this->rdocumento;
+                return $this->id;
         }
 
         /**
-         * Set the value of rdocumento
+         * Set the value of id
          *
          * @return  self
          */ 
-        public function setRdocumento($rdocumento)
+        public function setId($id)
         {
-                $this->rdocumento = $rdocumento;
+                $this->id = $id;
 
                 return $this;
         }
@@ -155,7 +164,7 @@
         {
             $str = " Nombre: ".$this->getPnombre().
             "\n Apellido: ".$this->getPapellido().
-            "\n Numero de DNI: ".$this->getRdocumento().
+            "\n Numero de DNI: ".$this->getId().
             "\n Numero de Telefono: ".$this->getPtelefono()."\n";
             return $str;
         }
@@ -169,7 +178,7 @@
                 $base = new BaseDatos;
                 $bool = false;
                 $consulta ="INSERT INTO pasajero(rdocumento,pnombre,papellido,ptelefono) 
-                VALUES (".$this->getRdocumento().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."')";
+                VALUES (".$this->getId().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."')";
                 if ($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 $bool = true;
@@ -192,7 +201,7 @@
         {
                 $base = new BaseDatos;
                 $bool = false;
-                $consulta = "UPDATE pasajero SET papellido='".$this->getPapellido()."',pnombre='".$this->getPnombre()."',ptelefono='".$this->getPtelefono()."',idviaje='".$this->getIdviaje()."' WHERE rdocumento=". $this->getRdocumento();
+                $consulta = "UPDATE pasajero SET papellido='".$this->getPapellido()."',pnombre='".$this->getPnombre()."',ptelefono='".$this->getPtelefono()."',idviaje='".$this->getIdviaje()."' WHERE rdocumento=". $this->getId();
                 if($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 $bool = true;
@@ -215,7 +224,7 @@
                 $base = new BaseDatos();
                 $resp = false;
                 if ($base->Iniciar()){
-                        $consulta = "DELETE FROM pasajero WHERE rdocumento= ". $this->getRdocumento();
+                        $consulta = "DELETE FROM pasajero WHERE rdocumento= ". $this->getId();
                         if($base->Ejecutar($consulta)){
                                 $resp = true;
                         }else{
@@ -281,7 +290,7 @@
                 if ($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 if($fila=$base->Registro()){
-                                        $this->setRdocumento($dni);
+                                        $this->setId($dni);
                                         $this->setPnombre($fila['pnombre']);
                                         $this->setPapellido($fila['papellido']);
                                         $this->setPtelefono($fila['ptelefono']);

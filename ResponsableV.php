@@ -2,19 +2,27 @@
 
 class responsable{
 
-    private $rnumeroempleado;
+    private $id;
     private $rnumerolicencia;
     private $rnombre;
     private $rapellido;
     private $mensajeoperacion;
 
-    public function __construct($rnumeroempleado, $rnumerolicencia, $nomEmpleado, $rapellidoEmpleado)
+    public function __construct()
     {
-        $this->rnumeroempleado = $rnumeroempleado;
-        $this->rnumerolicencia = $rnumerolicencia;
-        $this->rnombre = $nomEmpleado;
-        $this->rapellido = $rapellidoEmpleado;
+        $this->id;//$id;
+        $this->rnumerolicencia ="";
+        $this->rnombre ="";
+        $this->rapellido ="";
         $this->mensajeoperacion = "";
+    }
+
+    public function Cargar($id, $rnumerolicencia, $nomEmpleado, $rapellidoEmpleado)
+    {
+        $this->setId($id);
+        $this->setrnumerolicencia($rnumerolicencia);
+        $this->setrnombre($nomEmpleado);
+        $this->setrapellido($rapellidoEmpleado);
     }
 
     
@@ -26,9 +34,9 @@ class responsable{
 
 
 
-    public function getrnumeroempleado()
+    public function getId()
     {
-        return $this->rnumeroempleado;
+        return $this->id;
     }
 
     public function getrnumerolicencia()
@@ -46,9 +54,9 @@ class responsable{
         return $this->rapellido;
     }
 
-    public function setrnumeroempleado($rnumeroempleado)
+    public function setId($id)
     {
-        $this->rnumeroempleado = $rnumeroempleado;
+        $this->id = $id;
         return $this;
     }
     
@@ -97,7 +105,7 @@ class responsable{
                 rnombre: ".$this->getrnombre()."\n
                 rapellido: ". $this->getrapellido()."\n
                 Legajo: ". $this->getrnumerolicencia()."\n
-                Numero Identificatorio del Empleado: ". $this->getrnumeroempleado()."\n\n";
+                Numero Identificatorio del Empleado: ". $this->getId()."\n\n";
 
         return $str;
     }
@@ -115,7 +123,7 @@ class responsable{
     if($base->Iniciar()){
        if($base->Ejecutar($consulta)){
         if($fila2 = $base->Registro()){
-            $this->setrnumeroempleado($id);
+            $this->setId($id);
             $this->setrnombre($fila2['rnombre']);
             $this->setrapellido($fila2['rapellido']);
             $this->setrnumerolicencia($fila2['rnumerolicencia']);
@@ -138,7 +146,7 @@ class responsable{
 public function AgregarResponsable(){
     $base = new BaseDatos();
     $bool = false;
-    $consulta = "INSERT INTO responsable(rnumeroempleado,rnumerolicencia,rnombre,rapellido) VALUES (".$this->getrnumeroempleado().",'".$this->getrnumerolicencia()."','".$this->getrnombre()."','".$this->getrapellido()."')";
+    $consulta = "INSERT INTO responsable(rnumeroempleado,rnumerolicencia,rnombre,rapellido) VALUES (".$this->getId().",'".$this->getrnumerolicencia()."','".$this->getrnombre()."','".$this->getrapellido()."')";
     if($base->Iniciar()){
         if($base->Ejecutar($consulta)){
             $bool = true;
@@ -161,7 +169,7 @@ public function AgregarResponsable(){
 public function ModificarResponsable(){
     $bool = false;
     $base = new BaseDatos();
-    $consulta="UPDATE responsable SET rapellido='".$this->getrapellido()."',rnombre='".$this->getrnombre()."',rnumerolicencia='".$this->getrnumerolicencia()."' WHERE rnumeroempleado=". $this->getrnumeroempleado();
+    $consulta="UPDATE responsable SET rapellido='".$this->getrapellido()."',rnombre='".$this->getrnombre()."',rnumerolicencia='".$this->getrnumerolicencia()."' WHERE rnumeroempleado=". $this->getId();
     if($base->Iniciar()){
         if($base->Ejecutar($consulta)){
             $bool = true;
@@ -184,7 +192,7 @@ public function EliminarResponsable()
     $base= new BaseDatos;
     $bool = false;
     if($base->Iniciar()){
-        $consulta = "DELETE FROM responsable WHERE rnumeroempleado=". $this->getrnumeroempleado();
+        $consulta = "DELETE FROM responsable WHERE rnumeroempleado=". $this->getId();
         if ($base->Ejecutar($consulta)){
             $bool = true;
         }else{
@@ -205,7 +213,7 @@ public function EliminarResponsable()
  * @param string $condicion
  * @return array
  */
-public function ListarResponsable($condicion = "")
+public function Listar($condicion = "")
 {
     $base = new BaseDatos();
     $arregloResponsable = null;
@@ -218,7 +226,9 @@ public function ListarResponsable($condicion = "")
         if($base->Ejecutar($consulta)){
             $arregloResponsable = array();
             while($fila = $base->Registro()){
-                $arregloResponsable[]=new responsable($fila['rnumeroempleado'],$fila['rnumerolicencia'],$fila['rnombre'],$fila['rapellido']);
+                $obj = new responsable();
+                $obj->Cargar($fila['rnumeroempleado'],$fila['rnumerolicencia'],$fila['rnombre'],$fila['rapellido']);
+                $arregloResponsable[]=$obj;
             }
         }else{
             $this->setMensajeoperacion($base->getError());

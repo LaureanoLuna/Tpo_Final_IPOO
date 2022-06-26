@@ -2,23 +2,28 @@
 
 class empresa{
 
-    private $idempresa;
+    private $id;
     private $enombre;
     private $edireccion;
+    private $colViaje;
     private $mensajeoperacion;
 
-    /**
-     * Implementamos el metodo constructor de la clase
-     * @param int $id
-     * @param string $nombre
-     * @param string $direccion
-     */
+   
 
-    public function __construct($id,$nombre,$direccion)
+
+    public function __construct()
     {
-        $this->idempresa = $id;
-        $this->enombre = $nombre;
-        $this->edireccion = $direccion;        
+        $this->id =null; 
+        $this->enombre = null;
+        $this->edireccion =null;
+        $this->colObj = array();       
+    }
+
+    public function Cargar($id,$nombre,$direccion)
+    {
+        $this->setId($id);
+        $this->setEnombre($nombre);
+        $this->setEdireccion($direccion);
     }
 
     
@@ -29,19 +34,19 @@ class empresa{
     // Getters y Setters
 
     /**
-     * Get the value of idempresa
+     * Get the value of id
      */ 
-    public function getIdempresa()
+    public function getId()
     {
-        return $this->idempresa;
+        return $this->id;
     }
 
     /**
-     * Set the value of idempresa
+     * Set the value of id
      */ 
-    public function setIdempresa($idempresa)
+    public function setId($id)
     {
-        $this->idempresa = $idempresa;
+        $this->id = $id;
     }
 
     /**
@@ -76,6 +81,24 @@ class empresa{
         $this->edireccion = $edireccion;
     }
 
+     /**
+     * Get the value of colViaje
+     */ 
+    public function getColObj()
+    {
+        return $this->colViaje;
+    }
+
+    /**
+     * Set the value of colViaje
+     *
+     * @return  self
+     */ 
+    public function setColObj($colViaje)
+    {
+        $this->colViaje = $colViaje;
+    }
+
     /**
      * get the value of mensajeoperacion
      */
@@ -92,8 +115,24 @@ class empresa{
 
     public function __toString()
     {
-        $str = "\n{$this->getEnombre()}.\n{$this->getIdempresa()}.\n{$this->getEdireccion()}.\n";
+        $str = 
+        "\n".$this->getEnombre().
+        "\n".$this->getId().
+        "\n".$this->getEdireccion();
         
+        return $str;
+    }
+
+    public function StrColeccion()
+    {
+        
+        $colViaje = $this->getColObj();       
+        
+            $str = "";
+            foreach($colViaje as $viaje){
+            $str .= "----------------------\n".$viaje;
+            }
+      
         return $str;
     }
 
@@ -105,7 +144,7 @@ class empresa{
     {
         $base = new BaseDatos;
         $bool = true;
-        $consulta= "INSERT INTO empresa (idempresa,enombre,edireccion) VALUES (".$this->getIdempresa().",'".$this->getEnombre()."','".$this->getEdireccion()."')";
+        $consulta= "INSERT INTO empresa (idempresa,enombre,edireccion) VALUES (".$this->getId().",'".$this->getEnombre()."','".$this->getEdireccion()."')";
         if ($base->Iniciar()){
             if ($base->Ejecutar($consulta)){
                 $bool = true;
@@ -127,7 +166,7 @@ class empresa{
     {
         $base = new BaseDatos;
         $bool = false;
-        $consulta = "UPDATE empresa SET idempresa='".$this->getIdempresa()."',enombre='".$this->getEnombre()."',edireccion='".$this->getEdireccion()."' WHERE idempresa=". $this->getIdempresa();
+        $consulta = "UPDATE empresa SET idempresa='".$this->getId()."',enombre='".$this->getEnombre()."',edireccion='".$this->getEdireccion()."' WHERE idempresa=". $this->getId();
         if ($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $bool = true;
@@ -149,7 +188,7 @@ class empresa{
     {
         $base = new BaseDatos;
         $bool = false;
-        $consulta = "DELETE FROM empresa WHERE idempresa=". $this->getIdempresa();
+        $consulta = "DELETE FROM empresa WHERE idempresa=". $this->getId();
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $bool = true;
@@ -165,18 +204,18 @@ class empresa{
 
     /**
      * Metodo para buscar una tupla en la tabla de Empresa, esto es por medio de la clave primaria que es ingresa por parametro
-     * @param int $idEmpresa (PRIMARY KEY de al tupla a buscar)
+     * @param int $id (PRIMARY KEY de al tupla a buscar)
      * @return bool
      */
-    public function BuscarEmpresa($idEmpresa)
+    public function BuscarEmpresa($id)
     {
         $base= new BaseDatos();
-        $consulta = "SELECT * FROM empresa WHERE idempresa=" .$idEmpresa;
+        $consulta = "SELECT * FROM empresa WHERE idempresa=" .$id;
         $resp = false;
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 if($fila=$base->Registro()){
-                    $this->setIdempresa($idEmpresa);
+                    $this->setId($id);
                     $this->setEnombre($fila['enombre']);
                     $this->setEdireccion($fila['edireccion']);
                     $resp = true;
@@ -199,7 +238,7 @@ class empresa{
      * @return array 
      */
 
-    public function ListarEmpresa($condicion = "")
+    public function Listar($condicion = "")
     {
         $arregloEmpresa = null;
         $base = new BaseDatos();
@@ -207,13 +246,15 @@ class empresa{
         if ($condicion != ""){
             $consulta.= " WHERE ". $condicion;
         }
-         $consulta .= "ORDER BY enombre";
+         $consulta .= " ORDER BY idempresa";
 
          if ($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $arregloEmpresa = array();
                 while($fila=$base->Registro()){                    
-                    $arregloEmpresa[]= new empresa($fila['idempresa'],$fila['enombre'],$fila['edireccion']);
+                    $obj = new empresa();
+                    $obj->Cargar($fila['idempresa'],$fila['enombre'],$fila['edireccion']);
+                    $arregloEmpresa[]=$obj;
                 }
             } else{
                 $this->setmensajeoperacion($base->getError());
@@ -224,5 +265,7 @@ class empresa{
          }
          return $arregloEmpresa;
     }
+   
+
    
 }
