@@ -225,8 +225,8 @@ class viaje{
 
     public function __toString()
     {
-        $str = "\n".$this->getId()."\n".$this->getVdestino()."\n".$this->getVcantmaxpasajeros()."\n".$this->getRdocumento()."\n".$this->getIdempresa().
-        "\n".$this->getRnumeroempleado()."\n".$this->getVimporte()."\n".$this->getTipoAsiento()."\n".$this->getIdayvuelta()."\n";
+        $str = "\nN° Viaje ".$this->getId()."\nDestino ".$this->getVdestino()."\nCapacidad Max ".$this->getVcantmaxpasajeros()."\nDatos ".$this->getRdocumento()."\nEmpresa: ".$this->getIdempresa().
+        "\n N° Reponsable ".$this->getRnumeroempleado()."\nValor pasaje ".$this->getVimporte()."\nButacas ".$this->getTipoAsiento()."\nTipo Viaje ".$this->getIdayvuelta()."\n";
         return $str;
     }
 
@@ -318,9 +318,10 @@ class viaje{
             if($base->Ejecutar($consulta)){
                 $arregloViaje=array();
                 while($fila=$base->Registro()){
-                    $objViaje = new viaje($fila['idviaje'],$fila['vdestino'],$fila['vcantmaxpasajeros'],$fila['rdocumento'],$fila['vimporte'],$fila['tipoAsiento'],$fila['idayvuelta']);
+                    $objViaje = new viaje();
+                    $objViaje->Cargar($fila['idviaje'],$fila['vdestino'],$fila['vcantmaxpasajeros'],$fila['rdocumento'],$fila['vimporte'],$fila['tipoAsiento'],$fila['idayvuelta']);
                     if($fila['idempresa'] != null){
-                        $objViaje->setId($fila['idempresa']);
+                        $objViaje->setIdempresa($fila['idempresa']);
                     }
                     if($fila['rnumeroempleado'] != null){
                         $objViaje->setRnumeroempleado($fila['rnumeroempleado']);
@@ -345,7 +346,7 @@ class viaje{
     public function BuscarViaje($id)
     {
         $base = new BaseDatos();
-        $consulta = "SELECT * FROM viaje WHERE idviaje=".$this->getId();
+        $consulta = "SELECT * FROM viaje WHERE idviaje= ".$id;
         $bool = false;
 
         if($base->Iniciar()){

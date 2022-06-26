@@ -65,16 +65,15 @@ switch (Menu()) {
                 $objViaje->setRnumeroempleado($opcRespo);
             
                 echo "\n El viaje se guardo correctamente \n";
-              /*   $objEmpresa->BuscarEmpresa($opcEmpresa);
-                $colViaje= $objEmpresa->getColObj();
-                $colViaje[]= $objViaje;
-                $objEmpresa->setColObj($colViaje);
-                print_r($colViaje); */
+              
             }
         }
         break;
     case '2':
-
+        
+        $objViaje = new viaje();
+        
+        $opc = MostrarOpciones($objViaje);
         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
         echo "\nIngresar los datos del Pasajero\n";
         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
@@ -87,17 +86,35 @@ switch (Menu()) {
     
         $numTelefono =Interaccion("Numero de Telefono");
        
-        $objViaje = new viaje();
+
+        
         $objPasajero = new pasajero();
-        if ($objPasajero->Buscar($dniPasajero)){
+        
+        if (Comparar($objPasajero,$dniPasajero)){
 
-            $objViaje->BuscarViaje($objPasajero->getIdviaje());
-
-            echo " El Pasajero ya fue registrado en el viaje ";
-            echo $objViaje;
+            
+            $objPasajero->Cargar($nomPasajero, $apellidoPasajero, $dniPasajero, $numTelefono);
+            $objPasajero->setIdviaje($opc);
+            echo $objPasajero;
+            if($objPasajero->AgregarPasajero()){
+                echo "\nEl pasajero se cargo correctamente\n";
+            }
             
         }else{
-            $objPasajero->Cargar($nomPasajero, $apellidoPasajero, $dniPasajero, $numTelefono);
+            echo "\n El Pasajero ya fue registrado";
+            $objPasajero->Buscar($dniPasajero);
+            $idviaje= $objPasajero->getIdviaje();
+            
+            if ( $idviaje != ""){
+                echo "\n En el viaje \n";
+                 $objViaje->BuscarViaje($idviaje);
+                 echo $objViaje;
+            }
+            else{
+                echo "\nNo tiene un viaje asignado\n";
+            }
+
+         
         }
         
 
@@ -110,7 +127,21 @@ switch (Menu()) {
 
 
 
+function Comparar($obj,$dato){
+    $arreg = $obj->Listar();
+    $bool = true;
+    $i = 0;
+    while ($bool && $i < count($arreg)) {
+        
+        if($arreg[$i]->getId() == $dato){
+            $bool = false;
+        }
+        $i++;
+    }
 
+    return $bool;
+
+}
 
 
 
@@ -133,7 +164,7 @@ function MostrarOpciones($obj)
         echo "-------------------------------------------------------------\n";
         echo $x;
     }
-    echo "/////////////////////////////////////////////////////";
+    echo "\n/////////////////////////////////////////////////////\n";
     $opc = Interaccion("Elija una opcion");
 
     

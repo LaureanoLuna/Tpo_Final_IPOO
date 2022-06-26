@@ -1,8 +1,6 @@
 <?php 
 
-    /** Clase Persona , tiene un atributo el cual es un arreglo con las claves: nombre, apellido, DNI.
-    * correspondiendo a los datos ingresados para identificar al objeto Persona
-    */
+    
     class pasajero{
 
         private $pnombre;
@@ -12,14 +10,7 @@
         private $idviaje; 
 
     
-            /**
-             * Implementamos el metodo Constructor del objeto
-             * @param string $pnombre
-             * @param string $papellido
-             * @param int $id
-             * @param string $ptelefono
-             * @param int $idviaje             * 
-             */
+          
 
         public function __construct()
         {
@@ -30,6 +21,14 @@
            $this->idviaje = "";
         }
 
+          /**
+             * Implementamos el metodo Cargar del objeto
+             * @param string $pnombre
+             * @param string $papellido
+             * @param int $id
+             * @param string $ptelefono
+             * @param int $idviaje             
+             */
 
         public function Cargar($nomPers, $apellidoPers, $dniPersona, $numTelefono)
         {
@@ -165,7 +164,8 @@
             $str = " Nombre: ".$this->getPnombre().
             "\n Apellido: ".$this->getPapellido().
             "\n Numero de DNI: ".$this->getId().
-            "\n Numero de Telefono: ".$this->getPtelefono()."\n";
+            "\n Numero de Telefono: ".$this->getPtelefono().
+            "\n Viaje N° ". $this->getIdviaje();
             return $str;
         }
 
@@ -251,18 +251,18 @@
                 if ($condicion != ""){
                         $consulta.=' WHERE '. $condicion;
                 }
-                $consulta+="ORDER BY apellido ";
+                //$consulta.='ORDER BY rdocumento ';
                 if ($objBase->Iniciar()){
                         if($objBase->Ejecutar($consulta)){
                                 $arregloPasajero=[];
                                 while($fila=$objBase->Registro()){
-
+                                        $pasajero=new pasajero;
                                         $dni=$fila['rdocumento'];
                                         $nombre=$fila['pnombre'];
                                         $apellido=$fila['papellido'];
                                         $tel=$fila['ptelefono'];
                                         $idviaje=$fila['idviaje'];
-                                        $pasajero=new pasajero($nombre,$apellido,$dni,$tel);
+                                        $pasajero->Cargar($nombre,$apellido,$dni,$tel);
                                         $pasajero->setIdviaje($idviaje);
                                         $arregloPasajero[] = $pasajero;
                                 }
@@ -288,8 +288,11 @@
                 $consulta = "SELECT * FROM pasajero WHERE rdocumento=".$dni;
                 $resp = false;
                 if ($base->Iniciar()){
+                        echo "anda 1 ";
                         if($base->Ejecutar($consulta)){
+                                echo "anda 2 ";
                                 if($fila=$base->Registro()){
+                                        echo "anda 3 ";
                                         $this->setId($dni);
                                         $this->setPnombre($fila['pnombre']);
                                         $this->setPapellido($fila['papellido']);

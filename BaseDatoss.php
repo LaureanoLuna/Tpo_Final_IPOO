@@ -22,8 +22,8 @@ class BaseDatos {
         $this->PORT = "3306";
         $this->CLAVE="lunalaureanodevelopers";
         $this->RESULT=0;
-        $this->QUERY="";
-        $this->ERROR="";
+        $this->QUERY=" ";
+        $this->ERROR="NO ANDA";
     }
     /**
      * Funcion que retorna una cadena
@@ -87,7 +87,7 @@ class BaseDatos {
     public function Registro() {
         $resp = null;
         if ($this->RESULT){
-            unset($this->ERROR);
+           // unset($this->ERROR);
             if($temp = mysqli_fetch_assoc($this->RESULT)){
                 $resp = $temp;
             }else{
