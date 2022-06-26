@@ -3,84 +3,52 @@ include('BaseDatoss.php');
 include('ResponsableV.php');
 include('Empresa.php');
 include('Pasajero.php');
+include('Viaje.php');
  /****************************************************************************/
-        /********************TEST DE PRUEBA ***********************/
+        /******************** TEST DE PRUEBA ***********************/
  /****************************************************************************/
 
-$obj = new responsable(5,3,"Laureano","Luna");
-/*$resp = $obj->AgregarResponsable();
-if($resp){
-    echo "Anda\n-----------\n". $obj;
-} */
-/* $obj->setrnumeroempleado(1);
-$obj->setrnombre("Ivan");
-$resp = $obj->Modificar();
-if($resp == true){
-    echo "anda";
-}
-else{
-    echo "no anda";
-} */
-/* $obj->setrnumeroempleado(1);
-$resp = $obj->EliminarResponsable();
+function Menu()
+{
+    echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
 
-if($resp == true){
-    echo "anda";
-}else{
-    echo "no anda";
-} */
+    echo "\n1) Ingresar un nuevo viaje \n";// Inicializamos un nuevo objeto Persona y ViajeFeliz 
+    echo "\n2) Vender Pasaje \n"; // inicializamos al objeto Pasajero 
+    echo "\n3) Ver los datos del viaje y los Pasajeros \n";// una ves el objeto creado se pueden visualizar sus datos
+    echo "\n4) Modificar los datos ya generados \n";// en esta opvion se puede tener acceso a todos los atributos para settearlos
+    echo "\n5) Guardar los datos del viaje \n";// guarda el objeto Viaje Feliz en un arreglo con una clave que es el atributo codigo de viaje
+    echo "\n6) Ver los viajes ya guardados \n";// visualizamos los datos de los objetos ViajeFeliz ya creados y guardados
+    echo "\n7) Salir\n";
 
-$objEmpresa = new empresa(2,"Flecha","Nahuel");
-/* $resp= $objEmpresa->IngresarEmpresa();
-if ($resp){
-    echo "\nanda empresa ";
-} */
+    echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
 
-/* $objEmpresa->setIdempresa(1);
-$objEmpresa->setIdempresa(3);
-$resp = $objEmpresa->ModificarEmpresa();
-if ($resp){
-    echo "anda";
-} */
-/* $objEmpresa->setIdempresa(3);
-$resp = $objEmpresa->EliminarEmpresa();
-
-if ($resp){
-    echo "anda";
-} */
-
-//$objPasajero= new pasajero("Laureano","Luna",38233325,1126478811);
-
-/*$resp = $objPasajero->AgregarPasajero() */;
- /* 
-$objPasajero->setRdocumento(35468488);
-$objPasajero->setPnombre("CArlsod");
-
-$resp = $objPasajero->ModificarPasajero(35468488);
-
-if ($resp){
-    echo "Anda";
-} */
-
-
-$consulta= "SELECT * From pasajero inner join viaje on viaje.idviaje = pasajero.idviaje where pasajero.pnombre IN (SELECT * from pasajero where pnombre = 'Laureano');";
-$objBase= new BaseDatos();
-if($objBase->Iniciar()){
-    if($objBase->Ejecutar($consulta)){
-        $arrayPasajero=[];
-        while ($fila=$objBase->Registro()) {
-           $dni=$fila['rdocumento'];
-           $nombre=$fila['pnombre'];
-           $apellido=$fila['papellido'];
-           $tel=$fila['ptelefono'];
-           $idviaje=$fila['idviaje'];
-
-           $pasajero=new pasajero($nombre,$apellido,$dni,$tel);
-           $arrayPasajero[] = $pasajero;
-        }
-
-    }
+    $opc = trim(fgets(STDIN));
+    return $opc;
 }
 
-print_r($arrayPasajero);
+function Interaccion($tipoSolicitud)
+{
+                       
+    echo "\n".$tipoSolicitud . ": ";                   
+    $valorRetorno = trim(fgets(STDIN));
+    echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
+    return $valorRetorno;
+}
 
+switch (Menu()) {
+    case '1':
+        echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
+
+        $destino = Interaccion("Ingrese el Destino");
+        
+        $codViaje = Interaccion("Codigo identificatorio de Viaje");
+    
+        $capacidadViaje = Interaccion("Capacidad de pasajeros");
+    
+        $objViaje = new viaje($codViaje,$destino,$capacidadViaje,);
+        break;
+    
+    default:
+        # code...
+        break;
+}
