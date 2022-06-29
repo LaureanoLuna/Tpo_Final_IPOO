@@ -246,7 +246,7 @@ class empresa{
         if ($condicion != ""){
             $consulta.= " WHERE ". $condicion;
         }
-         $consulta .= " ORDER BY idempresa";
+        /*  $consulta .= " ORDER BY idempresa"; */
 
          if ($base->Iniciar()){
             if($base->Ejecutar($consulta)){

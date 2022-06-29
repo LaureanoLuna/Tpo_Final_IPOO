@@ -11,6 +11,7 @@ class viaje{
     private $vimporte;
     private $tipoAsiento;
     private $idayvuelta;
+    private $colObjPasajero;
     private $mensajeoperacion;
 
     public function __construct()
@@ -23,6 +24,7 @@ class viaje{
         $this->tipoAsiento = "";
         $this->idayvuelta = "";        
         $this->idempresa = null;
+        $this->colObjPasajero=[];
         $this->rnumeroempleado = null;
     }
 
@@ -206,6 +208,24 @@ class viaje{
     }
 
      /**
+     * Get the value of colObjPasajero
+     */ 
+    public function getColObjPasajero()
+    {
+        return $this->colObjPasajero;
+    }
+
+    /**
+     * Set the value of colObjPasajero
+     *
+     * @return  self
+     */ 
+    public function setColObjPasajero($colObjPasajero)
+    {
+        $this->colObjPasajero = $colObjPasajero;
+     }
+
+     /**
      * Get the value of mensajeoperacion
      */ 
     public function getMensajeoperacion()
@@ -262,7 +282,7 @@ class viaje{
     {
         $base = new BaseDatos();
         $bool = false;
-        $consulta = "UPDATE viaje SET vdestino ='".$this->getVdestino()."',vcantmaxpasajeros='".$this->getVcantmaxpasajeros()."',rdocumento='".$this->getRdocumento()."',vimporte='".$this->getVimporte()."',tipoAsiento='".$this->getTipoAsiento()."',idayvuelta='".$this->getIdayvuelta()."',idempresa='".$this->getIdempresa()."',rnumeroempleado='".$this->getRnumeroempleado()."' WHERE idviaje='".$this->getId();
+        $consulta = "UPDATE viaje SET vdestino = '{$this->getVdestino()}', vcantmaxpasajeros = {$this->getVcantmaxpasajeros()}, idempresa = {$this->getIdempresa()}, rnumeroempleado = {$this->getRnumeroempleado()}, vimporte = {$this->getVimporte()}, tipoAsiento = '{$this->getTipoasiento()}', idayvuelta = '{$this->getIdayvuelta()}' WHERE idviaje = {$this->getIdviaje()}";
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $bool = true;
@@ -313,7 +333,7 @@ class viaje{
         if($condicion != ""){
             $consulta.=" WHERE ". $condicion;
         }
-        $consulta .= "ORDER BY idviaje";
+        /* $consulta .= "ORDER BY idviaje"; */
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $arregloViaje=array();
@@ -372,6 +392,8 @@ class viaje{
 
         return $bool;
     }
+
+   
 
    
 }
