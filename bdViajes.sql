@@ -1,5 +1,5 @@
 CREATE DATABASE bdviajes; 
-
+use bdviaje;
 CREATE TABLE empresa(
     idempresa INT AUTO_INCREMENT,
     enombre varchar(150),

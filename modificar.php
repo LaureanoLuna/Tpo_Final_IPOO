@@ -13,7 +13,7 @@ $objPasajero = new pasajero();
 
 $base = new BaseDatos();
 
-$objViaje->BuscarViaje(14);
+$objViaje->BuscarViaje(1);
 $objViaje->setVdestino('Roca');
 $objViaje->ModificarViaje();
 echo $objViaje;
