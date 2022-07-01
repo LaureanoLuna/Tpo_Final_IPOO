@@ -56,8 +56,9 @@ echo "\n5) Salir\n";
 
 echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
 
-$opc = trim(fgets(STDIN));
+
 do{
+    $opc = trim(fgets(STDIN));
 
     switch ($opc) {
         /** 
@@ -267,20 +268,21 @@ do{
             $opc = trim(fgets(STDIN));
             // Menu Para Modificar cada clase
           do {
+            $opc = trim(fgets(STDIN));
             switch ($opc) {
                 case '1'://Opcion de Modificar Empresa
-                    $opc = Interaccion("1) Modificar\n2) Borrar");
-                  
                     do {
+                        $opc = Interaccion("1) Modificar\n2) Borrar");
                         switch ($opc) {
                             case '1'://Menu para Modificar
         
                                 echo "\n1) Datos de la Nombre\n";
                                 echo "\n2) Datos de la Direccion\n";
                                 echo "\n3) Datos de la ID Empresa\n";                        
-                                $opc = trim(fgets(STDIN));
+                               
                                 $objEmpresa = new empresa();
                                 do {
+                                    $opc = trim(fgets(STDIN));
                                     switch ($opc) {
                                         case '1'://Modificamos Nombre de Empresa
                                             $idEmp = Interaccion("¿ Que Empresa Modificar ?");
@@ -334,8 +336,9 @@ do{
                   
                     break;
                 case '2'://Opcion de Modificar Viaje
-                    $opc = Interaccion("1) Modificar\n2) Borrar");
+                    
                    do {
+                    $opc = Interaccion("1) Modificar\n2) Borrar");
                     switch ($opc) {
                         
                         case '1':
@@ -349,9 +352,10 @@ do{
                                 echo "\n5) Datos de la Importe\n";
                                 echo "\n6) Datos de la Tipo de Asiento\n";
                                 echo "\n7) Datos de la Ida y Vuetos\n";
-                                $opc = trim(fgets(STDIN));
+                              
     
                                 do {
+                                    $opc = trim(fgets(STDIN));
                                     switch ($opc) {//Menu para modificar la tabla del Viaje
                                         case '1':
                                             $objViaje= new viaje();
@@ -482,8 +486,9 @@ do{
                       
                     break;
                 case '3'://Opcion de Modificar Responsable
-                    $opc = Interaccion("1) Modificar\n2) Borrar");
+                   
                    do {
+                    $opc = Interaccion("1) Modificar\n2) Borrar");
                     switch ($opc) {
                         case '1':
                             echo "\n1) Modificar Licencia \n";
@@ -541,8 +546,9 @@ do{
                    } while ($opc<3);
                     break;
                 case '4'://Opcion de Modificar Pasajero
-                    $opc = Interaccion("1) Modificar\n2) Borrar");
+                   
                     do {
+                        $opc = Interaccion("1) Modificar\n2) Borrar");
                         switch ($opc) {
                             case '1': //Modificamos Pasajero
                                 echo "\n1) Modificar Nombre\n";
