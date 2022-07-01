@@ -87,7 +87,7 @@ class BaseDatos {
     public function Registro() {
         $resp = null;
         if ($this->RESULT){
-           // unset($this->ERROR);
+           unset($this->ERROR);
             if($temp = mysqli_fetch_assoc($this->RESULT)){
                 $resp = $temp;
             }else{
@@ -111,7 +111,7 @@ class BaseDatos {
         unset($this->ERROR);
         $this->QUERY = $consulta;
         if ($this->RESULT = mysqli_query($this->CONEXION,$consulta)){
-            $id = mysqli_insert_id();
+            $id = mysqli_insert_id($this->CONEXION);
             $resp =  $id;
         } else {
             $this->ERROR =mysqli_errno( $this->CONEXION) . ": " . mysqli_error( $this->CONEXION);

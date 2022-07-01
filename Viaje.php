@@ -26,7 +26,7 @@ class viaje{
         $this->objResponsable = null;
     }
 
-    public function Cargar($destino,$cantMaxPasajeros,$importe,$tipoAsiento,$idayvuelta, $objRespo, $objEmpre)
+    public function Cargar($destino,$cantMaxPasajeros,$importe,$tipoAsiento,$idayvuelta)
     {
         
         $this->setVdestino($destino);
@@ -34,7 +34,6 @@ class viaje{
         $this->setVimporte($importe);
         $this->setTipoAsiento($tipoAsiento);
         $this->setIdayvuelta($idayvuelta);
-        $this->setob;
     }
 
     //***********************************************
@@ -227,8 +226,8 @@ class viaje{
 
     public function __toString()
     {
-        $str = "\nN° Viaje ".$this->getId()."\nDestino ".$this->getVdestino()."\nCapacidad Max ".$this->getVcantmaxpasajeros()."\nEmpresa: ".$this->getobjEmpresa().
-        "\n N° Reponsable ".$this->getobjResponsable()."\nValor pasaje ".$this->getVimporte()."\nButacas ".$this->getTipoAsiento()."\nTipo Viaje ".$this->getIdayvuelta()."\n";
+        $str = "\nN° Viaje ".$this->getId()."\nDestino ".$this->getVdestino()."\nCapacidad Max ".$this->getVcantmaxpasajeros().
+        "\nValor pasaje ".$this->getVimporte()."\nButacas ".$this->getTipoAsiento()."\nTipo Viaje ".$this->getIdayvuelta()."\n\nEmpresa: ".$this->getobjEmpresa()."\n\n N° Reponsable ".$this->getobjResponsable();
         return $str;
     }
 
@@ -243,7 +242,7 @@ class viaje{
         $consulta = "INSERT INTO viaje(vdestino, vcantmaxpasajeros, vimporte, tipoAsiento, idayvuelta) VALUES ('".$this->getVdestino()."','".$this->getVcantmaxpasajeros()."','".$this->getVimporte()."','".$this->getTipoAsiento()."','".$this->getIdayvuelta()."')";
         $bool = false;
         if($base->Iniciar()){
-            if($base->Ejecutar($consulta)){
+            if($id=$base->devuelveIDInsercion($consulta)){
                 $bool = true;
             }else{
                 $this->setMensajeoperacion($base->getError());
@@ -251,7 +250,7 @@ class viaje{
         }else{
             $this->setMensajeoperacion($base->getError());
         }
-        return $bool;
+        return $id;
     }   
 
     // Metodo para modificar la una tupla de la tabla Viaje
@@ -264,10 +263,10 @@ class viaje{
     {
         $base = new BaseDatos();
         $bool = false;
-        $consulta = "UPDATE viaje SET vdestino = '{$this->getVdestino()}', vcantmaxpasajeros = {$this->getVcantmaxpasajeros()}, idempresa = {$this->getobjEmpresa()}, rnumeroempleado = {$this->getobjResponsable()}, vimporte = {$this->getVimporte()}, tipoAsiento = '{$this->getTipoAsiento()}', idayvuelta = '{$this->getIdayvuelta()}' WHERE idviaje = {$this->getId()}";
+        $consulta = "UPDATE viaje SET vdestino='".$this->getVdestino()."',vcantmaxpasajeros='". $this->getVcantmaxpasajeros()."',vimporte='". $this->getVimporte()."',tipoAsiento='". $this->getTipoAsiento()."',idayvuelta='". $this->getIdayvuelta()."' WHERE idviaje=". $this->getId();
         if($base->Iniciar()){
-            if($base->Ejecutar($consulta)){
-                $bool = true;
+            if($base->Ejecutar($consulta)){               
+                $bool = true;            
             }else{
                 $this->setMensajeoperacion($base->getError());
             }
@@ -321,6 +320,7 @@ class viaje{
                 $arregloViaje=array();
                 while($fila=$base->Registro()){
                     $objViaje = new viaje();
+                    $objViaje-> setId($fila['idviaje']);
                     $objViaje->Cargar($fila['vdestino'],$fila['vcantmaxpasajeros'],$fila['vimporte'],$fila['tipoAsiento'],$fila['idayvuelta']);
                     $objViaje->setobjEmpresa($fila['idempresa']);
                     $objViaje->setobjResponsable($fila['rnumeroempleado']);
@@ -372,6 +372,7 @@ class viaje{
         return $bool;
     }
 
+    
    
 
    

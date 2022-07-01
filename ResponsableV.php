@@ -101,11 +101,12 @@ class responsable{
 
     public function __toString()
     {
-        $str = "\nDatos del Responsable de Viaje: \n
-                rnombre: ".$this->getrnombre()."\n
-                rapellido: ". $this->getrapellido()."\n
-                Legajo: ". $this->getrnumerolicencia()."\n
-                Numero Identificatorio del Empleado: ". $this->getId()."\n\n";
+        $str = 
+        "\nDatos del Responsable de Viaje: \n
+         rnombre: ".$this->getrnombre()."\n
+         rapellido: ". $this->getrapellido()."\n
+         Legajo: ". $this->getrnumerolicencia()."\n
+         Numero Identificatorio del Empleado: ". $this->getId()."\n\n";
 
         return $str;
     }

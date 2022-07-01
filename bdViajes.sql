@@ -27,8 +27,7 @@ CREATE TABLE viaje (
     PRIMARY KEY (idviaje),
     FOREIGN KEY (idempresa) REFERENCES empresa (idempresa),
 	FOREIGN KEY (rnumeroempleado) REFERENCES responsable (rnumeroempleado)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON UPDATE CASCADE ON DELETE CASCADE
     ); 
 	
 CREATE TABLE pasajero (
@@ -38,7 +37,8 @@ CREATE TABLE pasajero (
 	ptelefono int, 
 	idviaje INT,
     PRIMARY KEY (rdocumento),
-	FOREIGN KEY (idviaje) REFERENCES viaje (idviaje)	
+	FOREIGN KEY (idviaje) REFERENCES viaje (idviaje)
+    	
     );
  
   

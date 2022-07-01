@@ -76,44 +76,44 @@ switch ($opc) {
 
         $idayVuelta = Interaccion("¿Solo Ida?");
 
+            
+            $objEmpresa = new empresa();
+            $opcEmpresa = MostrarOpciones($objEmpresa);
+            $objResponsable = new responsable();
+            $opcRespo = MostrarOpciones($objResponsable);
+            $objViaje = new viaje(); 
+            
         
-        $objEmpresa = new empresa();
-        $opcEmpresa = MostrarOpciones($objEmpresa);
-        $objResponsable = new responsable();
-        $opcRespo = MostrarOpciones($objResponsable);
-        $objViaje = new viaje(); 
-        $colViaje = $objViaje->Listar();
-       
-         if(ValidarViaje($objViaje,$destino)){ // Corroboramos que no se mismo Destino el Viaje
-                $objViaje->setIdempresa($opcEmpresa);
-                $objViaje->setRnumeroempleado($opcRespo);
-                $objViaje->Cargar($destino, $capacidadViaje,$importe,$tipoAsiento, $idayVuelta);
+                if(ValidarViaje($objViaje,$destino)){ // Corroboramos que no se mismo Destino el Viaje
+
+                    $objViaje->Cargar($destino, $capacidadViaje,$importe,$tipoAsiento, $idayVuelta);
+                    $id = $objViaje->IngresarViaje();
+                    //$objViaje->setobjEmpresa($opcEmpresa);
+                   // $objViaje->setobjResponsable($opcRespo);
+                   // echo $objViaje;
+                   // $objViaje->ModificarViaje();
+
+                    $objViaje->setId($id);
+                    $objEmpresa->BuscarEmpresa($opcEmpresa);
                 
-
-                    if ($objViaje->IngresarViaje()){ // Corroboramos que el Viaje se cargue correctamente
+                    $objViaje->setobjEmpresa($objEmpresa);
+                    $objResponsable->BuscarResponsable($opcRespo);
+                    $objViaje->setobjResponsable($objResponsable);
                     
-                        echo "\n El viaje se guardo correctamente \n";                
-                    }else{
-                        echo "\nERROR!!\n";
-                    }
-        }else{
-                echo "\nYa existe un Viaje con ese Destino\n ";
-
-                $x = EncontrarDato($objViaje, $destino);// Mostramos el Viaje con ese mismo destino
-                echo $x;
-            }
+                    echo $objViaje;
             
+                }else{
+                    echo "\nYa existe un Viaje con ese Destino\n ";
 
-     /*    }else{
-            echo "\nYa existe un Viaje con ese Id\n ";
-            $x = $objViaje->Listar(" idviaje = ".$codViaje);// Mostramos el Viaje con ese Id
-                foreach ($x as $value) {
-                    echo $value;
-                }        
-        } */
-           
-            
-        break;
+                    $objVRepetido = EncontrarDato($objViaje, $destino);// Mostramos el Viaje con ese mismo destino
+                    $c=$objVRepetido->getobjEmpresa();
+                    $objEmpresa->BuscarEmpresa($c);
+                    $$objVRepetido->setobjEmpresa($objEmpresa);
+                    $objResponsable->BuscarResponsable($objVRepetido->getobjResponsable());
+
+                }
+        break;  
+        
 
     /**
      * Menu Principal
@@ -122,8 +122,22 @@ switch ($opc) {
     case '2':
         
         $objViaje = new viaje(); //generamos el obj Viaje
+        $objE = new empresa();
+        $objR = new responsable();
+        $arregloObj = $objViaje->Listar();
+        foreach ($arregloObj as $x ) {
+            $idEmpresa = $x->getobjEmpresa();
+            $idResp = $x->getobjResponsable();
+            $objE->BuscarEmpresa($idEmpresa);
+            $objR->BuscarResponsable($idResp);
+            $x->setobjEmpresa($objE);
+            $x->setobjResponsable($objR);
+    
+            echo "-------------------------------------------------------------\n";
+            echo $x;
+        }
         
-        $opc = MostrarOpciones($objViaje); // llamamos a la funcion que muestra todos los datos de la tabla
+        //$opc = Mostrar($objViaje); // llamamos a la funcion que muestra todos los datos de la tabla
         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
         echo "\nIngresar los datos del Pasajero\n";
         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
@@ -181,54 +195,66 @@ switch ($opc) {
         $viaje= new viaje();
         $pasajero=new pasajero();
 
-        $eleccion = Interaccion("Que Viaje quiere Visualizar(Ingrese el id / Enter para todos?");/*Pedimos que id de viaje se quiere visualizar */
-        if($eleccion != null){ // Corroboro que la eleccion no sea nula para mostrar el Viaje solicitado
-            $colViaje = $viaje->getColObjPasajero(); 
-            $arreViaje = $viaje->Listar("idviaje=".$eleccion);// Generamos un arreglo con la tupla elegida de la tabla Viaje
+      /*  
+        $arregloObj = $viaje->Listar();
+        foreach ($arregloObj as $x ) {
+            $idEmpresa = $x->getobjEmpresa();
+            $idResp = $x->getobjResponsable();
+            $objEmpresa->BuscarEmpresa($idEmpresa);
+            $repo->BuscarResponsable($idResp);
+            $x->setobjEmpresa($objEmpresa);
+            $x->setobjResponsable($repo);
+    
+         
+        } */
 
-        }else{
-            $colViaje = $viaje->getColObjPasajero();// Generamos un arreglo con todas las tuplas de la tabla Viaje
-            $arreViaje = $viaje->Listar();
+        $eleccion = Interaccion("Que Viaje quiere Visualizar(Ingrese el id / Enter para todos?");/*Pedimos que id de viaje se quiere visualizar */
+       
+        if($eleccion != null){ // Corroboro que la eleccion no sea nula para mostrar el Viaje solicitado
+            $arreViaje = $viaje->Listar("idviaje=".$eleccion);// Generamos un arreglo con la tupla elegida de la tabla Viaje
+        }else{           
+            $arreViaje = $viaje->Listar();// Generamos un arreglo con todas las tupla la tabla Viaje
             echo "\nVeamos todos los Viajes\n";
         }   
-        
+       
+
         // Mostramos por pantalla los datos solicitados
         foreach ($arreViaje as $key => $value) {
+
+           
+           
+            echo "\n********************************************\n";
+            // por cada objeto tomamod el id de Empresa
+            $idEmpresa = $value->getobjEmpresa();
+            $objEmpresa->BuscarEmpresa($idEmpresa);// buscamos la empresa
+            $value->setobjEmpresa($objEmpresa); // setteamos el atributo de objEmpresa en la clase viaje
             
-            $idViaje = $value->getId();
-            echo "\n********************************************\n";
-            echo $value;
-            echo "\n********************************************\n";
-            if($objEmpresa->BuscarEmpresa($value->getIdempresa())){ // Mostramos el dato de La Empresa asociada al Viaje
-                echo  "\nEmpresa de Viaje\n".$objEmpresa."\n";
-            }
-            if($repo->BuscarResponsable($value->getRnumeroempleado())){// Mostramos el dato del Responsable asociado al Viaje
-                echo $repo;
+            // por cada objeto tomamod el id de Responsable
+            $idResp = $value->getobjResponsable();
+            $repo->BuscarResponsable($idResp);// buscamos al responsable
+            $value->setobjResponsable($repo);// setteamos el atributo de objResponsable en la clase viaje
+
+            $arregloPasajeros = $pasajero->Listar('idviaje='.$value->getId());// generamos un arreglo listando de la BD de los pasajeros con cada objViaje 
+           
+
+            $value->setColObjPasajero($arregloPasajeros); // Setteamos el arreglo de ObjPasajeros por cada objViaje
+            
+            echo $value; //Mostramos el Obj Viaje
+
+            foreach ($value->getColObjPasajero() as $key => $valor) {
+                echo "\n→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→\n";
+                echo $valor; // Mostramos cada ObjPasajero de cada Viaje
+                echo "\n→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→\n";
             }
            
-            
-            
+            echo "\n********************************************\n";
 
-            if($colViaje= $pasajero->Listar('idviaje='.$idViaje)){// Mostramos los datos de los Pasajeros asociados al Viaje
-                
-                foreach ($colViaje as $clave => $valor) {
-                    echo "\n------------------------------------------------\n";
-                    echo $valor;
-                }
-            }else{
-                echo "\nEl viaje no tiene pasajeros asignados\n"; //Mensaje por si no hay Pasajeros en el Viaje
-            }
-
-        }
-
-           $viaje->setColObjPasajero($colViaje);// se settea la coleccion de obj Pasajeros del ObjViaje
-           print_r($viaje->getColObjPasajero());
-        
+        } 
         break;
 
     /**
          * Menu Principal
-         *  4) Modificar los datos ya generados 
+         *  4) Modificar/ Borrar los datos ya generados 
          */
 
     case '4':
@@ -237,9 +263,185 @@ switch ($opc) {
         echo "\n2) Datos de la Viajes\n";
         echo "\n3) Datos de la Responsable\n";
         echo "\n4) Datos de la Pasajeros\n";
+        $opc = trim(fgets(STDIN));
+        // Menu Para Modificar cada clase
+        switch ($opc) {
+            case '1'://Opcion de Modificar Empresa
+                $opc = Interaccion("1) Modificar\n2) Borrar");
+              
+                switch ($opc) {
+                    case '1'://Menu para Modificar
+
+                        echo "\n1) Datos de la Nombre\n";
+                        echo "\n2) Datos de la Direccion\n";
+                        echo "\n3) Datos de la ID Empresa\n";                        
+                        $opc = trim(fgets(STDIN));
+                        $objEmpresa = new empresa();
+                        switch ($opc) {
+                            case '1'://Modificamos Nombre de Empresa
+                                $idEmp = Interaccion("¿ Que Empresa Modificar ?");
+                                $newData = Interaccion("Ingrese el nuevo Nombre de la Empresa");
+                                if (ValidarNombre($objEmpresa, $newData)){                                    
+                                $objEmpresa->BuscarEmpresa($idEmp);
+                                $objEmpresa->setEnombre($newData);
+                                $objEmpresa->ModificarEmpresa();
+                                echo $objEmpresa;
+                            }else{
+                                echo "\nYa existe una Empresa con ese nombre \n";
+                            }                         
+                                break;
+                            case '2':
+                                $idEmp = Interaccion("¿ Que Empresa Modificar ?");
+                                $newData = Interaccion("Ingrese la nueva Direccion de la Empresa");
+                                $objEmpresa->BuscarEmpresa($idEmp);
+                                $objEmpresa->setEdireccion($newData);
+                                $objEmpresa->ModificarEmpresa();
+                                echo $objEmpresa;
+                               
+                                break;
+                           
+                            default:
+                               
+                                break;
+                        }
+                        
+                        break;
+                    case '2':// Menu para Borrar
+                        $objEmpresa = new empresa();
+                        $obj=new viaje;
+                        $idEmp = Interaccion("¿ Que Empresa Eliminar ?");
+                        $colViaje = $obj->Listar('idempresa='. $idEmp);
+                        foreach ($colViaje as $key => $value) {
+                            echo $value;
+                            $value->setobjEmpresa();
+                            $value->ModificarViaje();
+                        }
+                        $objEmpresa->BuscarEmpresa($idEmp);
+                        $objEmpresa->EliminarEmpresa();
+                                echo $objEmpresa;
+                        break;   
+                    
+                    default:
+                        # code...
+                        break;
+                }
+              
+                break;
+            case '2'://Opcion de Modificar Viaje
+                $opc = Interaccion("1) Modificar\n2) Borrar");
+                switch ($opc) {
+                    
+                    case '1':
+                       
+                        $viaje = new viaje();
+
+                            echo "\n1) Datos de la Destino\n";
+                            echo "\n2) Datos de la Capacidad Maxima\n";
+                            echo "\n3) Datos de la ID Empresa\n";
+                            echo "\n4) Datos de la Responsable del Viaje\n";
+                            echo "\n5) Datos de la Importe\n";
+                            echo "\n6) Datos de la Tipo de Asiento\n";
+                            echo "\n7) Datos de la Ida y Vuetos\n";
+                            $opc = trim(fgets(STDIN));
+
+                            switch ($opc) {//Menu para modificar la tabla del Viaje
+                                case '1':
+                                    $objViaje= new viaje();
+                                    $idvia = Interaccion("¿ Que Viaje Modificar ?");
+                                    $newData = Interaccion("Ingrese el nuevo Destino de la Viaje");
+                                    
+                                    
+                                    /* if(ValidarDestino($objViaje,$newData)){ */
+                                        $objViaje->BuscarViaje($idvia);
+                                        $objViaje->setVdestino($newData);
+                                        $objViaje->ModificarViaje();
+                                   /*  }else{ */
+                                        echo "YA hay un viaje con ese destino";
+                                /*     } */
+                                  
+                                    break;
+                                case '2': //Datos de la Capacidad Maxima
+                                    $objViaje= new viaje();
+                                    $idvia = Interaccion("¿ Que Viaje Modificar ?");
+                                    $newData = Interaccion("Ingrese la Nueva Capacidad del Viaje");
+                                    
+                                    $objViaje->BuscarViaje($idvia);
+                                    $objViaje->setVcantmaxpasajeros($newData);
+                                    $objViaje->ModificarViaje();
+                                    break;
+                                case '3': // Datos de la ID Empresa
+                                    
+                                    $objViaje= new viaje();
+                                    $objEmpresa= new empresa();
+                                    $idvia = Interaccion("¿ Que Viaje Modificar ?");
+                                    $newData = Interaccion("Ingrese la Nueva Capacidad del Viaje");
+                                   
+                                    $objViaje->BuscarViaje($idvia);
+                                    $x =$objViaje->getobjEmpresa();
+                                    if ($objEmpresa->BuscarEmpresa($x)){
+                                        $objViaje->setobjEmpresa($newData);
+                                        $objViaje->ModificarViaje();
+                                        echo $objViaje;
+                                    }
+                                   
+                                    break;
+                                case '4': //Datos de la Responsable del Viaje
+                                    $objViaje= new viaje();
+                                    $objEmpresa= new responsable();
+                                    $idvia = Interaccion("¿ Que Viaje Modificar ?");
+                                    $newData = Interaccion("Ingrese el id  del Responable");
+                                   
+                                    $objViaje->BuscarViaje($idvia);
+                                    $x =$objViaje->getobjResponsable();
+                                   // if ($objEmpresa->BuscarResponsable($x)){
+                                        $objViaje->setobjEmpresa($newData);
+                                        $objViaje->ModificarViaje();
+                                        echo $objViaje;
+                                    //}
+                                    break;
+                                case '5':
+                                   
+                                    break;
+                                case '6':
+                                    # code...
+                                    break;
+                                case '7':
+                                    # code...
+                                    break;
+                                case '8':
+                                    # code...
+                                    break;
+                                default:
+                                    # code...
+                                    break;
+                            }
+                       
+                        break;
+                    case '2':
+                        # code...
+                         break;
+                    
+                    default:
+                        # code...
+                        break;
+                }
+                  
+                break;
+            case '3'://Opcion de Modificar Responsable
+                     
+                break;
+            case '4'://Opcion de Modificar Pasajero
+              
+                break;
+                
+            default:
+                # code...
+                break;
+        }
 
 
 
+    break;
 
         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
 
@@ -250,8 +452,7 @@ switch ($opc) {
         echo "\n4)Cambiar destino del viaje \n";// settea el atributo setDestino con un valor ingresado por teclado 
         echo "\n5)Cambiar la capacidad del viaje \n";// settea el atributo setCapMaxPers con un valor ingresado por teclado
         echo "\n6)Volver al menu anterior \n";// regresa al menu anterior
-        $opc = trim(fgets(STDIN));
-
+        
         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
 
         echo "\n1) Datos de la Empresa\n";
@@ -331,11 +532,11 @@ switch ($opc) {
                         case '1':
                             
                            $viaje->setId(Interaccion("Ingrese el nuevo dato"));
-                           $dataViaje = $viaje->getRnumeroempleado();
-                           $dataViaje2= $viaje->getIdempresa();
+                           $dataViaje = $viaje->getobjResponsable();
+                           $dataViaje2= $viaje->getobjEmpresa();
                            $viaje->Cargar($viaje->getId(),$viaje->getVdestino(),$viaje->getVcantmaxpasajeros(),$viaje->getVimporte(),$viaje->getTipoAsiento(),$viaje->getIdayvuelta());
                            
-                           $viaje->setIdempresa($dataViaje2);
+                           $viaje->setobjEmpresa($dataViaje2);
                            $viaje->setId($num);
                            $viaje->EliminarViaje();
                             break;
@@ -343,12 +544,12 @@ switch ($opc) {
                          
                            break;
                         case '5':
-                            $viaje->setIdempresa(Interaccion("Ingrese el nuevo dato"));
+                            $viaje->setobjEmpresa(Interaccion("Ingrese el nuevo dato"));
                            if($viaje->ModificarViaje()){
                             echo $viaje;
                            }break;
                            case '6':
-                            $viaje->setRnumeroempleado(Interaccion("Ingrese el nuevo dato"));
+                            $viaje->setobjResponsable(Interaccion("Ingrese el nuevo dato"));
                            if($viaje->ModificarViaje()){
                             echo $viaje;
                            }
@@ -455,7 +656,7 @@ switch ($opc) {
         
                         $nuevoApellido =Interaccion("Ingrese el nuevo Apellido");
 
-                        $objPasajero = $objViaje->getObjPersona()[$numPasajero - 1]; 
+                        //$objPasajero = $objViaje->getObjPersona()[$numPasajero - 1]; 
 
                         if($objPasajero->CambiarDatos("apellido",$nuevoApellido)){
                             echo "\n La modificacion se realiazo con exito\n";
@@ -470,7 +671,7 @@ switch ($opc) {
 
                         $nuevoDNI = Interaccion("Ingrese el nuevo numero de DNI");
 
-                        $objPasajero = $objViaje->getObjPersona()[$numPasajero - 1]; 
+                       // $objPasajero = $objViaje->getObjPersona()[$numPasajero - 1]; 
 
                         if($objPasajero->CambiarDatos("DNI",$nuevoDNI)){
                             echo "\n La modificacion se realiazo con exito\n";
@@ -485,7 +686,7 @@ switch ($opc) {
            
                         $nuevoPhonePasajero = Interaccion("Ingrese el nuevo numero de Telefono");
 
-                        $objPasajero = $objViaje->getObjPersona()[$numPasajero - 1]; 
+                       // $objPasajero = $objViaje->getObjPersona()[$numPasajero - 1]; 
 
                         if($objPasajero->CambiarDatos("Telefono",$nuevoPhonePasajero)){
                             echo "\n La modificacion se realiazo con exito\n";
@@ -507,6 +708,37 @@ switch ($opc) {
         # code...
         break;
     }
+}
+
+function ValidarDestino($obj, $data){
+    $colObj = $obj->Listar();
+    $i=0;
+    $bool = true;
+    while($bool && $i < count($colObj)){
+        echo $colObj[$i];
+        if($data == $colObj[$i]->getVdestino()){
+            $bool= false;
+        }
+        $i++;
+    }
+
+    return $bool;    
+}
+
+
+
+function ValidarNombre($obj, $data){
+    $colObj = $obj->Listar();
+    $i=0;
+    $bool = true;
+    while($bool && $i < count($colObj)){
+        if ($data == $colObj[$i]->getEnombre()){
+            $bool= false;
+        }
+        $i++;
+    }
+
+    return $bool;    
 }
 
 
@@ -539,12 +771,9 @@ function Interaccion($tipoSolicitud)
     return $valorRetorno;
 }
 
-
-
-function MostrarOpciones($obj)
-{
-    $arregloObj = $obj->Listar();
-    foreach ($arregloObj as $x ) {
+function MostrarOpciones($obj){
+    $arreglo =$obj->Listar();
+    foreach($arreglo as $x){
         echo "-------------------------------------------------------------\n";
         echo $x;
     }
@@ -553,6 +782,27 @@ function MostrarOpciones($obj)
 
     
     return $opc;   
+}
+
+
+
+function Mostrar($obj)
+{
+    $objE = new empresa();
+    $objR = new responsable();
+    $arregloObj = $obj->Listar();
+    foreach ($arregloObj as $x ) {
+        $idEmpresa = $x->getobjEmpresa();
+        $idResp = $x->getobjResponsable();
+        $objE->BuscarEmpresa($idEmpresa);
+        $objR->BuscarResponsable($idResp);
+        $x->setobjEmpresa($objE);
+        $x->setobjResponsable($objR);
+
+        echo "-------------------------------------------------------------\n";
+        echo $x;
+    }
+   
 }
 
 function Coleccion($obj , $id)
