@@ -2,7 +2,7 @@
 
 class empresa{
 
-    private $id;
+    private $idempresa;
     private $enombre;
     private $edireccion;
     private $colViaje;
@@ -13,7 +13,7 @@ class empresa{
 
     public function __construct()
     {
-        $this->id =null; 
+        $this->idempresa =null; 
         $this->enombre = null;
         $this->edireccion =null;
         $this->colObj = array();       
@@ -21,7 +21,7 @@ class empresa{
 
     public function Cargar($id,$nombre,$direccion)
     {
-        $this->setId($id);
+        $this->setIdempresa($id);
         $this->setEnombre($nombre);
         $this->setEdireccion($direccion);
     }
@@ -36,17 +36,17 @@ class empresa{
     /**
      * Get the value of id
      */ 
-    public function getId()
+    public function getIdempresa()
     {
-        return $this->id;
+        return $this->idempresa;
     }
 
     /**
      * Set the value of id
      */ 
-    public function setId($id)
+    public function setIdempresa($id)
     {
-        $this->id = $id;
+        $this->idempresa = $id;
     }
 
     /**
@@ -117,7 +117,7 @@ class empresa{
     {
         $str = 
         "\n".$this->getEnombre().
-        "\n".$this->getId().
+        "\n".$this->getIdempresa().
         "\n".$this->getEdireccion();
         
         return $str;
@@ -144,7 +144,7 @@ class empresa{
     {
         $base = new BaseDatos;
         $bool = true;
-        $consulta= "INSERT INTO empresa (idempresa,enombre,edireccion) VALUES (".$this->getId().",'".$this->getEnombre()."','".$this->getEdireccion()."')";
+        $consulta= "INSERT INTO empresa (enombre,edireccion) VALUES ('".$this->getEnombre()."','".$this->getEdireccion()."')";
         if ($base->Iniciar()){
             if ($base->Ejecutar($consulta)){
                 $bool = true;
@@ -166,7 +166,7 @@ class empresa{
     {
         $base = new BaseDatos;
         $bool = false;
-        $consulta = "UPDATE empresa SET idempresa='".$this->getId()."',enombre='".$this->getEnombre()."',edireccion='".$this->getEdireccion()."' WHERE idempresa=". $this->getId();
+        $consulta = "UPDATE empresa SET idempresa='".$this->getIdempresa()."',enombre='".$this->getEnombre()."',edireccion='".$this->getEdireccion()."' WHERE idempresa=". $this->getIdempresa();
         if ($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $bool = true;
@@ -188,7 +188,7 @@ class empresa{
     {
         $base = new BaseDatos;
         $bool = false;
-        $consulta = "DELETE FROM empresa WHERE idempresa=". $this->getId();
+        $consulta = "DELETE FROM empresa WHERE idempresa=". $this->getIdempresa();
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 $bool = true;
@@ -215,7 +215,7 @@ class empresa{
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
                 if($fila=$base->Registro()){
-                    $this->setId($id);
+                    $this->setIdempresa($id);
                     $this->setEnombre($fila['enombre']);
                     $this->setEdireccion($fila['edireccion']);
                     $resp = true;
@@ -250,7 +250,7 @@ class empresa{
 
          if ($base->Iniciar()){
             if($base->Ejecutar($consulta)){
-                $arregloEmpresa = array();
+                $arregloEmpresa = [];
                 while($fila=$base->Registro()){                    
                     $obj = new empresa();
                     $obj->Cargar($fila['idempresa'],$fila['enombre'],$fila['edireccion']);

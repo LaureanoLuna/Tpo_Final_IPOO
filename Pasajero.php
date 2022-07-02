@@ -5,7 +5,7 @@
 
         private $pnombre;
         private $papellido;
-        private $id;
+        private $idpasajero;
         private $ptelefono;  
         private $objViaje; 
 
@@ -16,7 +16,7 @@
         {
            $this->pnombre ="";
            $this->papellido = "";
-           $this->id = "";
+           $this->idpasajero = "";
            $this->ptelefono ="";
            $this->objViaje = new viaje();
         }
@@ -34,7 +34,7 @@
         {
                $this->setPnombre($nomPers);
                $this->setPapellido($apellidoPers);
-               $this->setId($dniPersona);
+               $this->setIdpasajero($dniPersona);
                $this->seTptelefono($numTelefono);
         }
 
@@ -88,9 +88,9 @@
         /**
          * Get the value of id
          */ 
-        public function getId()
+        public function getIdpasajero()
         {
-                return $this->id;
+                return $this->idpasajero;
         }
 
         /**
@@ -98,9 +98,9 @@
          *
          * @return  self
          */ 
-        public function setId($id)
+        public function setIdpasajero($idpasajero)
         {
-                $this->id = $id;
+                $this->idpasajero = $idpasajero;
 
                 return $this;
         }
@@ -130,7 +130,7 @@
          */ 
         public function getObjViaje()
         {
-                return $this->idviaje;
+                return $this->objViaje;
         }
 
         /**
@@ -140,7 +140,7 @@
          */ 
         public function setObjViaje($objViaje)
         {
-                $this->idviaje = $objViaje;
+                $this->objViaje = $objViaje;
         }
 
         
@@ -159,11 +159,12 @@
         /**Metodo implemetado para poder mostrar los datos de dicho objeto */
         public function __toString()
         {
-            $str = " Nombre: ".$this->getPnombre().
-            "\n Apellido: ".$this->getPapellido().
-            "\n Numero de DNI: ".$this->getId().
-            "\n Numero de Telefono: ".$this->getPtelefono().
-            "\n Viaje N° ". $this->getObjViaje();
+            $str = "****************************************
+                \nNombre: ".$this->getPnombre().
+                "\n Apellido: ".$this->getPapellido().
+                "\n Numero de DNI: ".$this->getIdpasajero().
+                "\n Numero de Telefono: ".$this->getPtelefono().
+                "\n Viaje N° ". $this->getObjViaje();
             return $str;
         }
 
@@ -176,7 +177,7 @@
                 $base = new BaseDatos;
                 $bool = false;
                 $consulta ="INSERT INTO pasajero(rdocumento,pnombre,papellido,ptelefono,idviaje) 
-                VALUES (".$this->getId().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."','".$this->getObjViaje()->getId().")";
+                VALUES ({$this->getIdpasajero()},'{$this->getPnombre()}','{$this->getPapellido()}',{$this->getPtelefono()},{$this->getObjViaje()->getIdviaje()})";
                 if ($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 $bool = true;
@@ -199,7 +200,9 @@
         {
                 $base = new BaseDatos;
                 $bool = false;
-                $consulta = "UPDATE pasajero SET papellido='".$this->getPapellido()."',pnombre='".$this->getPnombre()."',ptelefono='".$this->getPtelefono()."',idviaje='".$this->getObjViaje()->getId()."' WHERE rdocumento=". $this->getId();
+                
+                $consulta = "UPDATE pasajero SET papellido='{$this->getPapellido()}',pnombre='{$this->getPnombre()}',ptelefono={$this->getPtelefono()},idviaje={$this->getObjViaje()->getIdviaje()} WHERE rdocumento=". $this->getIdpasajero();
+                
                 if($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 $bool = true;
@@ -222,7 +225,7 @@
                 $base = new BaseDatos();
                 $resp = false;
                 if ($base->Iniciar()){
-                        $consulta = "DELETE FROM pasajero WHERE rdocumento= ". $this->getId();
+                        $consulta = "DELETE FROM pasajero WHERE rdocumento= ". $this->getIdpasajero();
                         if($base->Ejecutar($consulta)){
                                 $resp = true;
                         }else{
@@ -262,7 +265,8 @@
                                         $tel=$fila['ptelefono'];
                                         $idviaje=$fila['idviaje'];
                                         $pasajero->Cargar($nombre,$apellido,$dni,$tel);
-                                        $pasajero->setObjViaje($objViaje->BuscarViaje($idviaje));
+                                        $objViaje->BuscarViaje($idviaje);
+                                        $pasajero->setObjViaje($objViaje);
                                         $arregloPasajero[] = $pasajero;
                                 }
                         }else {
@@ -291,12 +295,14 @@
                         if($base->Ejecutar($consulta)){
                                
                                 if($fila=$base->Registro()){
-                                        $objViaj = new viaje();
-                                        $this->setId($dni);
+                                       
+                                        $this->setIdpasajero($dni);
                                         $this->setPnombre($fila['pnombre']);
                                         $this->setPapellido($fila['papellido']);
                                         $this->setPtelefono($fila['ptelefono']);
-                                        $this->setObjViaje($objViaj->BuscarViaje($fila['idviaje']));
+                                        $objViaj = new viaje();
+                                        $objViaj->BuscarViaje($fila['idviaje']);
+                                        $this->setObjViaje($objViaj);
                                         $resp = true;
                                 }else {
                                         $this->setmensajeoperacion($base->getError());
@@ -308,5 +314,15 @@
                 }
                 
                 return $resp;
+        }
+
+        public function BorrarMasivo($condicion)
+        {
+                $col = $this->Listar($condicion);
+
+                foreach ($col as $key => $value) {
+                        $value->EliminarPasajero();
+                }
+                
         }
 }

@@ -2,7 +2,7 @@
 
 class viaje{
 
-    private $id;
+    private $idviaje;
     private $vdestino;
     private $vcantmaxpasajeros;
     private $vimporte;
@@ -15,15 +15,15 @@ class viaje{
 
     public function __construct()
     {
-        $this->id = "";
+        $this->idviaje = "";
         $this->vdestino = "";
         $this->vcantmaxpasajeros = "";       
         $this->vimporte = "";
         $this->tipoAsiento = "";
         $this->idayvuelta = "";        
-        $this->objEmpresa = new empresa;
+        $this->objEmpresa = new empresa();
         $this->colObjPasajero=[];
-        $this->objResponsable = new responsable;
+        $this->objResponsable = new responsable();
     }
 
     public function Cargar($destino,$cantMaxPasajeros,$importe,$tipoAsiento,$idayvuelta)
@@ -45,9 +45,9 @@ class viaje{
     /**
      * Get the value of id
      */ 
-    public function getId()
+    public function getIdviaje()
     {
-        return $this->id;
+        return $this->idviaje;
     }
 
     /**
@@ -55,9 +55,9 @@ class viaje{
      *
      * @return  self
      */ 
-    public function setId($id)
+    public function setIdviaje($idviaje)
     {
-        $this->id = $id;
+        $this->idviaje = $idviaje;
     }
 
     /**
@@ -226,7 +226,7 @@ class viaje{
 
     public function __toString()
     {
-        $str = "\nN° Viaje ".$this->getId()."\nDestino ".$this->getVdestino()."\nCapacidad Max ".$this->getVcantmaxpasajeros().
+        $str = "\nN° Viaje ".$this->getIdviaje()."\nDestino ".$this->getVdestino()."\nCapacidad Max ".$this->getVcantmaxpasajeros().
         "\nValor pasaje ".$this->getVimporte()."\nButacas ".$this->getTipoAsiento()."\nTipo Viaje ".$this->getIdayvuelta()."\n\nEmpresa: ".$this->getobjEmpresa()."\n\n N° Reponsable ".$this->getobjResponsable();
         return $str;
     }
@@ -239,7 +239,7 @@ class viaje{
     public function IngresarViaje()
     {
         $base = new BaseDatos();
-        $consulta = "INSERT INTO viaje(vdestino, vcantmaxpasajeros, vimporte, tipoAsiento, idayvuelta, idempresa, rnumeroempleado) VALUES ('".$this->getVdestino()."','".$this->getVcantmaxpasajeros()."','".$this->getVimporte()."','".$this->getTipoAsiento()."','".$this->getIdayvuelta()."','".$this->getobjEmpresa()->getId()."','".$this->getobjResponsable()->getId().")";
+        $consulta = "INSERT INTO viaje(idviaje, vdestino, vcantmaxpasajeros, vimporte, tipoAsiento, idayvuelta, idempresa, rnumeroempleado) VALUES ({$this->getIdviaje()},'{$this->getVdestino()}',{$this->getVcantmaxpasajeros()},{$this->getVimporte()},'{$this->getTipoAsiento()}','{$this->getIdayvuelta()}',{$this->getobjEmpresa()->getIdempresa()},{$this->getobjResponsable()->getIdresponsable()})";
         $bool = false;
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){
@@ -263,7 +263,7 @@ class viaje{
     {
         $base = new BaseDatos();
         $bool = false;
-        $consulta = "UPDATE viaje SET vdestino='".$this->getVdestino()."',vcantmaxpasajeros='". $this->getVcantmaxpasajeros()."',vimporte='". $this->getVimporte()."',tipoAsiento='". $this->getTipoAsiento()."',idayvuelta='". $this->getIdayvuelta()."'idempresa='".$this->getobjEmpresa()->getId()."'rnumeroempleado='".$this->getobjResponsable()->getId()."' WHERE idviaje=". $this->getId();
+        $consulta = "UPDATE viaje SET vdestino='{$this->getVdestino()}', vcantmaxpasajeros={$this->getVcantmaxpasajeros()}, vimporte={$this->getVimporte()},tipoAsiento='{$this->getTipoAsiento()}',idayvuelta='{$this->getIdayvuelta()}', idempresa={$this->getobjEmpresa()->getIdempresa()},rnumeroempleado={$this->getobjResponsable()->getIdresponsable()} WHERE idviaje=". $this->getIdviaje();
         if($base->Iniciar()){
             if($base->Ejecutar($consulta)){               
                 $bool = true;            
@@ -284,9 +284,17 @@ class viaje{
     public function EliminarViaje()
     {       
         $base= new BaseDatos();
+        $objResponsable= new responsable();
+        $objEmpresa= new empresa;
+        $objPasajero=new pasajero;
         $bool = false;
         if($base->Iniciar()){
-            $consulta = "DELETE FROM viaje WHERE idviaje=".$this->getId();
+            $consulta = "DELETE FROM viaje WHERE idviaje=".$this->getIdviaje();
+            $objPasajero->BorrarMasivo('idviaje='.$this->getIdviaje());
+            $objResponsable->BuscarResponsable($this->getobjResponsable()->getIdresponsable());
+            $objResponsable->EliminarResponsable();
+            $objEmpresa->BuscarEmpresa($this->getobjEmpresa()->getIdempresa());
+            $objEmpresa->EliminarEmpresa();
             if($base->Ejecutar($consulta)){
                 $bool = true;
             }else{
@@ -322,11 +330,12 @@ class viaje{
                     $objViaje = new viaje();
                     $objEmp = new empresa();
                     $objRes = new responsable();
-                    $objViaje->setId($fila['idviaje']);
+                    $objViaje->setIdviaje($fila['idviaje']);
                     $objViaje->Cargar($fila['vdestino'],$fila['vcantmaxpasajeros'],$fila['vimporte'],$fila['tipoAsiento'],$fila['idayvuelta']);
-                    $objViaje->setobjEmpresa($objEmp->BuscarEmpresa($fila['idempresa']));
-                    $objViaje->setobjResponsable($objRes->BuscarResponsable($fila['rnumeroempleado']));
-                
+                    $objEmp->BuscarEmpresa($fila['idempresa']);
+                    $objViaje->setobjEmpresa($objEmp);
+                    $objRes->BuscarResponsable($fila['rnumeroempleado']);                    
+                    $objViaje->setobjResponsable($objRes);                
                     $arregloViaje[]= $objViaje;
                 }
             }else{
@@ -355,14 +364,16 @@ class viaje{
                 if($fila=$base->Registro()){
                     $objEmp = new empresa();
                     $objRes = new responsable();
-                    $this->setId($id);
+                    $this->setIdviaje($id);
                     $this->setVdestino($fila['vdestino']);
                     $this->setVcantmaxpasajeros($fila['vcantmaxpasajeros']);                   
                     $this->setVimporte($fila['vimporte']);
                     $this->setTipoAsiento($fila['tipoAsiento']);
                     $this->setIdayvuelta($fila['idayvuelta']);
-                    $this->setobjEmpresa($objEmp->BuscarEmpresa($fila['idempresa']));
-                    $this->setobjResponsable($objRes->BuscarResponsable($fila['rnumeroempleado']));
+                    $objEmp->BuscarEmpresa($fila['idempresa']);
+                    $this->setobjEmpresa($objEmp);
+                    $objRes->BuscarResponsable($fila['rnumeroempleado']);
+                    $this->setobjResponsable($objRes);
                     $bool = true;
                 }
             }else{
