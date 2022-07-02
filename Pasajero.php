@@ -7,7 +7,7 @@
         private $papellido;
         private $id;
         private $ptelefono;  
-        private $idviaje; 
+        private $objViaje; 
 
     
           
@@ -18,7 +18,7 @@
            $this->papellido = "";
            $this->id = "";
            $this->ptelefono ="";
-           $this->idviaje = "";
+           $this->objViaje = new viaje();
         }
 
           /**
@@ -128,7 +128,7 @@
         /**
          * Get the value of idviaje
          */ 
-        public function getIdviaje()
+        public function getObjViaje()
         {
                 return $this->idviaje;
         }
@@ -138,11 +138,9 @@
          *
          * @return  self
          */ 
-        public function setIdviaje($idviaje)
+        public function setObjViaje($objViaje)
         {
-                $this->idviaje = $idviaje;
-
-                return $this;
+                $this->idviaje = $objViaje;
         }
 
         
@@ -165,7 +163,7 @@
             "\n Apellido: ".$this->getPapellido().
             "\n Numero de DNI: ".$this->getId().
             "\n Numero de Telefono: ".$this->getPtelefono().
-            "\n Viaje N° ". $this->getIdviaje();
+            "\n Viaje N° ". $this->getObjViaje();
             return $str;
         }
 
@@ -177,8 +175,8 @@
         {
                 $base = new BaseDatos;
                 $bool = false;
-                $consulta ="INSERT INTO pasajero(rdocumento,pnombre,papellido,ptelefono) 
-                VALUES (".$this->getId().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."')";
+                $consulta ="INSERT INTO pasajero(rdocumento,pnombre,papellido,ptelefono,idviaje) 
+                VALUES (".$this->getId().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."','".$this->getObjViaje()->getId().")";
                 if ($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 $bool = true;
@@ -201,7 +199,7 @@
         {
                 $base = new BaseDatos;
                 $bool = false;
-                $consulta = "UPDATE pasajero SET papellido='".$this->getPapellido()."',pnombre='".$this->getPnombre()."',ptelefono='".$this->getPtelefono()."',idviaje='".$this->getIdviaje()."' WHERE rdocumento=". $this->getId();
+                $consulta = "UPDATE pasajero SET papellido='".$this->getPapellido()."',pnombre='".$this->getPnombre()."',ptelefono='".$this->getPtelefono()."',idviaje='".$this->getObjViaje()->getId()."' WHERE rdocumento=". $this->getId();
                 if($base->Iniciar()){
                         if($base->Ejecutar($consulta)){
                                 $bool = true;
@@ -256,6 +254,7 @@
                         if($objBase->Ejecutar($consulta)){
                                 $arregloPasajero=[];
                                 while($fila=$objBase->Registro()){
+                                        $objViaje=new viaje;
                                         $pasajero=new pasajero;
                                         $dni=$fila['rdocumento'];
                                         $nombre=$fila['pnombre'];
@@ -263,7 +262,7 @@
                                         $tel=$fila['ptelefono'];
                                         $idviaje=$fila['idviaje'];
                                         $pasajero->Cargar($nombre,$apellido,$dni,$tel);
-                                        $pasajero->setIdviaje($idviaje);
+                                        $pasajero->setObjViaje($objViaje->BuscarViaje($idviaje));
                                         $arregloPasajero[] = $pasajero;
                                 }
                         }else {
@@ -288,16 +287,16 @@
                 $consulta = "SELECT * FROM pasajero WHERE rdocumento=".$dni;
                 $resp = false;
                 if ($base->Iniciar()){
-                        echo "anda 1 ";
+                        
                         if($base->Ejecutar($consulta)){
-                                echo "anda 2 ";
+                               
                                 if($fila=$base->Registro()){
-                                        echo "anda 3 ";
+                                        $objViaj = new viaje();
                                         $this->setId($dni);
                                         $this->setPnombre($fila['pnombre']);
                                         $this->setPapellido($fila['papellido']);
                                         $this->setPtelefono($fila['ptelefono']);
-                                        $this->setIdviaje($fila['idviaje']);
+                                        $this->setObjViaje($objViaj->BuscarViaje($fila['idviaje']));
                                         $resp = true;
                                 }else {
                                         $this->setmensajeoperacion($base->getError());
