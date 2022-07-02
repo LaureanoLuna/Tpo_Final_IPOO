@@ -55,7 +55,7 @@ function menuPasajero(){
                 echo "Ingrese el dni del pasajero: \n";
                 $dni = trim(fgets(STDIN));
                 $objPasas = new Pasajero();
-                if ($objPasas->buscar($dni)) {
+                if ($objPasas->Buscar($dni)) {
                     echo $objPasas;
                 } else {
                     echo "No se encontró el pasajero.\n";
@@ -131,7 +131,7 @@ function menuPasajero(){
                 if ($objPasas->Buscar($dniPasa)) {
                     echo "Ese pasajero ya existe.\n";
                 } else {
-                   /*  $objPasas->set($dniPasa); */
+                   
                     echo "\nIngrese el nombre: \n";
                     $nombre = trim(fgets(STDIN));
                     $objPasas->setPnombre($nombre);
@@ -587,5 +587,168 @@ function MenuResposable(){
 }
 
 
+function MenuEmpresa(){
+    
+    $bool = true;
+    while ($bool) {
+        echo "Menu empresa.\n
+        1. Ver empresas.\n
+        2. Buscar empresa.\n
+        3. Modificar empresa.\n
+        4. Eliminar empresa.\n
+        5. Cargar empresa.\n";
+      
+        $opc = trim(fgets(STDIN));
+        switch ($opc) {
+            case '1': //opcion para ver las Empresas   
+                $objEmpresa= new empresa();             
+                $colEmpresas =$objEmpresa->Listar();
+                if (count($colEmpresas) == 0) {
+                    echo "No hay empresas cargadas.\n";
+                } else {                    
+                    
+                    foreach ($colEmpresas as  $value) {
+                        echo "><><><><><><><><><><><><><><><><><><><><><><><><><><><><\n";
+                        echo $value;                       
+                        echo "><><><><><><><><><><><><><><><><><><><><><><><><><><><><\n";
+                    }
+                    
+                }
+                break;
 
+            case '2'://Opcion para Buscar Empresa
+                
+                echo "Ingrese el número de empresa: \n";
+                $idE =trim(fgets(STDIN));
+                $objEmpresa = new empresa();
+                if ($objEmpresa->BuscarEmpresa($idE)) {
+                    echo $objEmpresa;
+                } else {
+                    echo "No existe la empresa.\n";
+                }
+                break;
+
+            case '3':// Opcion para modificar la Empresa                
+                echo "Ingrese el ID de empresa: \n";
+                $idE =trim(fgets(STDIN));
+                $objEmpresa = new Empresa();
+                if ($objEmpresa->BuscarEmpresa($idE)) {
+                    echo $objEmpresa;
+
+                    echo "Modificar :\n1)Nombre\n2) Direccion \n";
+                    $opc = trim(fgets(STDIN));
+                    switch ($opc) {
+                        case '1':
+                            echo "Ingrese el nombre: \n";
+                            $nombre = trim(fgets(STDIN));
+                            $objEmpresa->setEnombre($nombre);
+                            if ($objEmpresa->ModificarEmpresa()) {
+                                echo "Se ha modificado la empresa.\n";
+                            }
+                            
+                            break;
+                        case '2':
+                            echo "Ingrese la dirección: \n";
+                            $edireccion = trim(fgets(STDIN));
+                            $objEmpresa->setEdireccion($edireccion);
+                            if ($objEmpresa->ModificarEmpresa()) {
+                                echo "Se ha modificado la empresa.\n";
+                            }
+                           
+                            break;
+                        
+                        default:
+                            # code...
+                            break;
+                    }
+                }     
+                break;
+
+            case '4'://Opcion para eliminar un Empresa
+               
+                echo "Ingrese el número de empresa: \n";
+                $idE = trim(fgets(STDIN));
+                $objEmpresa = new empresa();
+                if ($objEmpresa->BuscarEmpresa($idE)) {
+                    if($objEmpresa->EliminarEmpresa()){
+                        echo "La empresa se ha eliminado.\n";
+                    }else{
+                        echo "La empresa no se ha podido eliminar.\n";                       
+                    }
+                } else {
+                    echo "No existe la empresa.\n";
+                }
+                break;
+
+            case '5':// Opcion para cargar una empresa
+                //cargar empresa
+                $bool = true;
+               
+                    echo "Ingrese el id de la empresa: \n";
+                    $idE = trim(fgets(STDIN));
+                    $objEmpresa = new empresa();
+                    if($objEmpresa->BuscarEmpresa($idE)){
+                        echo "El id ya esta utilizado.\n";
+                    }else{                       
+                        $objEmpresa->setId($idE);
+                    }
+               
+                echo "Ingrese el nombre de la empresa: \n";
+                $nombre = trim(fgets(STDIN));
+                $objEmpresa->setEnombre($nombre);
+                echo "Ingrese la dirección de la empresa: \n";
+                $direccion = trim(fgets(STDIN));
+                $objEmpresa->setEdireccion($direccion);
+                if($objEmpresa->IngresarEmpresa()){
+                    echo "Se ingreso Correctamente.\n";
+                }else{
+                    echo "La empresa no se ha podido insertar.\n";
+                   
+                }
+                
+                break;
+
+          
+            default:
+                # code...
+                break;
+        }
+    }
+
+}
+
+
+$salidaGeneral = true;
+while ($salidaGeneral) {
+    Menu();
+    $opc = trim(fgets(STDIN));
+    switch ($opc) {
+        case '1':
+            //pasajero
+            menuPasajero();
+            break;
+
+        case '2':
+            //responsable 
+            MenuResposable();
+            break;
+
+        case '3':
+            //viaje
+            MenuViaje();
+            break;
+
+        case '4':
+            //empresa 
+            MenuEmpresa();
+            break;
+
+        case '5':
+            $salidaGeneral = false;
+            break;
+
+        default:
+            break;
+    }
+}
 ?>
