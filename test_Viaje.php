@@ -215,7 +215,7 @@ function MenuViaje(){
         switch ($opc) {
             case '1':// Opcion para ver los Viajes
                 $objViaje=new viaje();   
-                $objPasajero= new pasajero();         
+                    
                 $colViajes = $objViaje->Listar();
                 if (count($colViajes) == 0) {
                     echo "No hay viajes.\n";
