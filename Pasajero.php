@@ -325,4 +325,18 @@
                 }
                 
         }
+
+        public function ValidadEsta($valor){
+                $bool = true;
+                $i = 0;
+                $objPas = $this->Listar();
+                while ($bool) {
+                        if ($objPas[$i]->getIdpasajero() == $valor){
+                                $bool = false;
+                        }                     
+                        $i++;   
+                }
+                return $bool;
+        }
+       
 }

@@ -283,18 +283,13 @@ class viaje{
      */
     public function EliminarViaje()
     {       
-        $base= new BaseDatos();
-        $objResponsable= new responsable();
-        $objEmpresa= new empresa;
+        $base= new BaseDatos();        
         $objPasajero=new pasajero;
         $bool = false;
         if($base->Iniciar()){
             $consulta = "DELETE FROM viaje WHERE idviaje=".$this->getIdviaje();
             $objPasajero->BorrarMasivo('idviaje='.$this->getIdviaje());
-            $objResponsable->BuscarResponsable($this->getobjResponsable()->getIdresponsable());
-            $objResponsable->EliminarResponsable();
-            $objEmpresa->BuscarEmpresa($this->getobjEmpresa()->getIdempresa());
-            $objEmpresa->EliminarEmpresa();
+         
             if($base->Ejecutar($consulta)){
                 $bool = true;
             }else{

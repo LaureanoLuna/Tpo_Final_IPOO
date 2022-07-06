@@ -41,7 +41,7 @@ function menuPasajero(){
                 }else{
                  
                    
-                    foreach ($colPasas as $key => $value) {
+                    foreach ($colPasas as $value) {
                         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
                         echo "\n".$value;
                         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";                          
@@ -55,10 +55,10 @@ function menuPasajero(){
                 echo "Ingrese el dni del pasajero: \n";
                 $dni = trim(fgets(STDIN));
                 $objPasas = new pasajero();
-                if ($objPasas->Buscar($dni)) {
+                if ($objPasas->Buscar($dni)) {                   
                     echo $objPasas;
                 } else {
-                    echo "No se encontró el pasajero.\n";                    
+                    echo "No se encontró el pasajero.\n";
                 }
                 break;
 
@@ -74,7 +74,10 @@ function menuPasajero(){
                   
                     $bool =true;
                     while ($bool) {
-                        echo "\nMEnu Modificar\n1) Nombre\n2) Apellido\n3) Telefono";
+                        echo "\nMEnu Modificar\n
+                        1) Nombre\n
+                        2) Apellido\n
+                        3) Telefono\n";
                        $opc=trim(fgets(STDIN));
                        switch ($opc) {
                         case '1':
@@ -148,8 +151,17 @@ function menuPasajero(){
                     $tel = trim(fgets(STDIN));
                     $objPasas->setPtelefono($tel);
                     $bool = true;
+
+                    $colViaje = $objPasas->getObjViaje()->Listar();
+
+                    foreach ($colViaje as $key => $value) {
+                        echo "***********************************************\n";
+                        echo $value;
+                        echo "***********************************************\n";
+                    }
+                    echo "Ingrese el número de viaje existente: \n";
                     while($bool){
-                        echo "Ingrese el número de viaje existente: \n";
+                       
                         $idViaje = trim(fgets(STDIN));
                         $objV = new viaje();
                         if($objV->BuscarViaje($idViaje)){
@@ -202,7 +214,8 @@ function MenuViaje(){
         $opc = trim(fgets(STDIN));
         switch ($opc) {
             case '1':// Opcion para ver los Viajes
-                $objViaje=new viaje();            
+                $objViaje=new viaje();   
+                $objPasajero= new pasajero();         
                 $colViajes = $objViaje->Listar();
                 if (count($colViajes) == 0) {
                     echo "No hay viajes.\n";
@@ -212,6 +225,7 @@ function MenuViaje(){
                         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
                         echo  $value;
                         echo "\n○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
+                      
                     }
                    
                 }
@@ -235,7 +249,14 @@ function MenuViaje(){
                 $objViaje = new viaje();
                 if ($objViaje->BuscarViaje($idV)) {
                     echo $objViaje;
-                    echo "Modificar\n1) Destino\n2) Importe\n3) Cantidad Maxima de Pasajero\n4) Tipo de Asiento\n5) Ida y Vuelta\n6) Empresa\n7) Responsable";
+                    echo "Modificar\n
+                    1) Destino\n
+                    2) Importe\n
+                    3) Cantidad Maxima de Pasajero\n
+                    4) Tipo de Asiento\n
+                    5) Ida y Vuelta\n
+                    6) Empresa\n
+                    7) Responsable";
                     $bool = true;
                     $opc=trim(fgets(STDIN));
                     switch ($opc) {
@@ -319,7 +340,7 @@ function MenuViaje(){
                            echo "\nElija al responsable\n";
                            foreach ($colRes as $value) {
                             echo "-------------------------------------------------------------\n";
-                            $value;
+                            echo $value;
                             echo "-------------------------------------------------------------\n";                            
                            }
                            echo "\nIngrese N° identificatorio del Responsable\n";
@@ -338,7 +359,7 @@ function MenuViaje(){
                     }
 
                 }
-                break;           
+            break;          
 
             case '4':// Opcion para eliminar un Viaje
 
@@ -373,14 +394,24 @@ function MenuViaje(){
                 $objViaje = new viaje();
                      echo "Ingrese el id del viaje: \n";
                     $idV = trim(fgets(STDIN));
-                   
+                    $bool= true;
+                   while ($bool) {
+
                     if($objViaje->BuscarViaje($idV)){
                         echo "El id ya existe\n";
+                        echo "Ingrese otro\n";
+                        $idV = trim(fgets(STDIN));
                     }else{
-                        $objViaje->setIdviaje($idV);                     
+                        $objViaje->setIdviaje($idV);
+                        $bool = false;                     
                     } 
+                   
+                   }
+                   
                     echo "Ingrese el destino: \n";
-                    $destino = trim(fgets(STDIN));
+                    $destino = trim(fgets(STDIN));                   
+                   
+                 
                     $objViaje->setVdestino($destino);
                     echo "Ingrese la cantidad máxima de pasajeros: \n";
                     $vcantmaxpasajeros = trim(fgets(STDIN));
@@ -393,13 +424,21 @@ function MenuViaje(){
                         echo "\n********************************************\n";
                         echo $value;
                         echo "\n********************************************\n";
-                    }                    
-                        echo "Ingrese el id de una empresa\n";
+                    }
+                    echo "Ingrese el id de una empresa\n";
+                    $bool = true;
+                     while ($bool) {
+                       
                         $idE = trim(fgets(STDIN));
                         $objEmp = new empresa();
                         if($objEmp->BuscarEmpresa($idE)){                           
-                            $objViaje->setobjEmpresa($objEmp);                           
-                        } 
+                            $objViaje->setobjEmpresa($objEmp);
+                            $bool = false;                           
+                        }
+                        else{
+                            echo "Ingrese una Empresa de la lista\n";
+                        }
+                     }
                      
                     $colRep= $objViaje->getobjResponsable()->Listar();
 
@@ -409,13 +448,19 @@ function MenuViaje(){
                          echo $value;
                          echo "\n********************************************\n";
                     }                                
-                   
-                        echo "Ingrese el número de un responsable.\n";
+                    $bool = true;
+                    echo "Ingrese el número de un responsable.\n";
+                       while ($bool) {
+                       
                         $rnumeroempleado = trim(fgets(STDIN));
                         $objResponsable = new responsable();
                         if($objResponsable->BuscarResponsable($rnumeroempleado)){
                             $objViaje->setobjResponsable($objResponsable);
+                            $bool = false;
+                        }else{
+                            echo "ingrese a un Responsable de la lista";
                         }
+                       }
                     
                     echo "Ingrese el importe: \n";
                     $vimporte = trim(fgets(STDIN));
@@ -459,7 +504,13 @@ function MenuResposable(){
 
     $bool = true;
     while ($bool) {
-        echo "Menu responsable.\n 1. Ver .\n 2. Buscar .\n 3. Modificar.\n 4. Eliminar .\n 5. Crear \n 6. Salir\n";
+        echo "Menu responsable.\n
+        1. Ver.\n
+        2. Buscar.\n
+        3. Modificar.\n
+        4. Eliminar.\n 
+        5. Crear.\n
+        6. Salir.\n";
         $opc = trim(fgets(STDIN));
         switch ($opc) {
             case '1':// Opcion para ver los Responsables 
@@ -507,7 +558,7 @@ function MenuResposable(){
                             if ($numlicencia != '') {
                                 $objRes->setrnumerolicencia($numlicencia);
                                 if ($objRes->ModificarResponsable()) {
-                                    echo "Se han modificado los datos.\n";
+                                    echo "Se  modifico el numero de licencia.\n";
                                 }
                             }
                             break;
@@ -517,7 +568,7 @@ function MenuResposable(){
                             if ($nombre != '') {
                                 $objRes->setRnombre($nombre);
                                 if ($objRes->ModificarResponsable()) {
-                                    echo "Se han modificado los datos.\n";
+                                    echo "Se  modifico el nombre.\n";
                                 }
                             }
                             break;
@@ -527,7 +578,7 @@ function MenuResposable(){
                             if ($apellido != '') {
                                 $objRes->setRapellido($apellido);
                                 if ($objRes->ModificarResponsable()) {
-                                    echo "Se han modificado los datos.\n";
+                                    echo "Se modifico el apellido.\n";
                                 }
                             }
                             break;
@@ -536,7 +587,10 @@ function MenuResposable(){
                             # code...
                             break;
                     }
+                }else{
+                    echo "\nno se encontro el Responsable\n";
                 }
+               
                 break;
 
             case '4':// OPcion para eliminar un Responsable
@@ -693,17 +747,36 @@ function MenuEmpresa(){
                 $bool = true;
                 $objEmpresa = new empresa();
                     echo "Ingrese el id de la empresa: \n";
+                    $bool = true;
+                   while ($bool) {
                     $idE = trim(fgets(STDIN));
                     
                     if($objEmpresa->BuscarEmpresa($idE)){
                         echo "El id ya esta utilizado.\n";
                     }else{                       
                         $objEmpresa->setIdempresa($idE);
+                        $bool = false;
                     }
+                   }
                
                 echo "Ingrese el nombre de la empresa: \n";
                 $nombre = trim(fgets(STDIN));
-                $objEmpresa->setEnombre($nombre);
+                $colEmpresa=$objEmpresa->Listar();
+                $i=0;
+                $bool=true;
+                while ($bool) {
+                    if($colEmpresa[$i]->getEnombre() == $nombre){
+                        echo "Ya esta esa empresa cargada\n";
+                    }else{
+                        $objEmpresa->setEnombre($nombre);
+                        $bool = false;
+
+                    }
+                    $i++;            
+                    
+                }
+              
+               
                 echo "Ingrese la dirección de la empresa: \n";
                 $direccion = trim(fgets(STDIN));
                 $objEmpresa->setEdireccion($direccion);

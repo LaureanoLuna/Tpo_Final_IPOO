@@ -1,4 +1,4 @@
-﻿--Active: 1655502347157@@127.0.0.1@3306@bdviajes
+﻿
 <?php
 /* IMPORTANTE !!!!  Clase para (PHP 5, PHP 7)*/
 

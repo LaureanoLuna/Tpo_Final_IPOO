@@ -103,8 +103,8 @@ class responsable{
     {
         $str = 
         "\nDatos del Responsable de Viaje: \n
-         rnombre: ".$this->getrnombre()."\n
-         rapellido: ". $this->getrapellido()."\n
+         Nombre: ".$this->getrnombre()."\n
+         Apellido: ". $this->getrapellido()."\n
          Legajo: ". $this->getrnumerolicencia()."\n
          Numero Identificatorio del Empleado: ". $this->getIdresponsable()."\n\n";
 
@@ -193,7 +193,7 @@ public function EliminarResponsable()
     $base= new BaseDatos;
     $bool = false;
     if($base->Iniciar()){
-        $consulta = "DELETE FROM responsable WHERE rnumeroempleado=". $this->getIdresponsable();
+        $consulta = "DELETE FROM responsable WHERE rnumeroempleado=". $this->getIdresponsable();      
         if ($base->Ejecutar($consulta)){
             $bool = true;
         }else{

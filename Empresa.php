@@ -118,23 +118,12 @@ class empresa{
         $str = 
         "\n".$this->getEnombre().
         "\n".$this->getIdempresa().
-        "\n".$this->getEdireccion();
+        "\n".$this->getEdireccion()."\n";
         
         return $str;
     }
 
-    public function StrColeccion()
-    {
-        
-        $colViaje = $this->getColObj();       
-        
-            $str = "";
-            foreach($colViaje as $viaje){
-            $str .= "----------------------\n".$viaje;
-            }
-      
-        return $str;
-    }
+   
 
     // Metodo para ingresar una nueva tupla a la tabla Empresa
     /**
